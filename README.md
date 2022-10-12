@@ -47,8 +47,6 @@ We can move block 1 to the end of Chr01 with reverse complement.
 If you want executable file, please use pyinstaller, and run commands below
 ```bash
 pip install pyinstaller
-pyinstaller --noconsole MCAAG.py --hidden-import PySide2.QtXML
-mkdir -p dist/MCAAG/coll_asm_adj_gui/ui
-cp coll_asm_adj_gui/ui/*.ui dist/MCAAGcoll_asm_adj_gui/ui
+pyinstaller -F MCAAG.spec
 ```
-After all done, copy MCAAG folder in dist folder to anywhere with same platform to use it.
+After all done, copy MCAAG in dist folder to anywhere with same platform to use it.

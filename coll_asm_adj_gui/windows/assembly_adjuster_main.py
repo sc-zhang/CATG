@@ -1,6 +1,6 @@
 from os import path
 from coll_asm_adj_gui.windows import file_loader_dialog
-from coll_asm_adj_gui.io import file_reader
+from coll_asm_adj_gui.io import file_reader, resources_loader
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
 from PySide2.QtWidgets import QWidget, QLabel, QGraphicsScene, QFileDialog
@@ -47,7 +47,8 @@ class AssemblyAdjusterMain(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        qfile_file_loader = QFile("coll_asm_adj_gui/ui/assembly_adjuster_main.ui")
+        main_ui_file = resources_loader.resource_path("coll_asm_adj_gui/ui/assembly_adjuster_main.ui")
+        qfile_file_loader = QFile(main_ui_file)
         qfile_file_loader.open(QFile.ReadOnly)
         qfile_file_loader.close()
 

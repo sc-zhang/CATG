@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QDialog, QFileDialog, QDialogButtonBox
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import QFile, Signal
+from coll_asm_adj_gui.io.resources_loader import resource_path
 
 
 class FileLoaderDialog(QDialog):
@@ -17,7 +18,8 @@ class FileLoaderDialog(QDialog):
         self.init_ui()
 
     def init_ui(self):
-        qfile_file_loader = QFile("coll_asm_adj_gui/ui/file_loader_dialog.ui")
+        file_loader_ui_file = resource_path("coll_asm_adj_gui/ui/file_loader_dialog.ui")
+        qfile_file_loader = QFile(file_loader_ui_file)
         qfile_file_loader.open(QFile.ReadOnly)
         qfile_file_loader.close()
 
