@@ -47,6 +47,6 @@ We can move block 1 to the end of Chr01 with reverse complement.
 If you want executable file, please use pyinstaller, and run commands below
 ```bash
 pip install pyinstaller
-pyinstaller -F MCAAG.spec
+pyinstaller MCAAG.spec
 ```
 After all done, copy MCAAG in dist folder to anywhere with same platform to use it.
