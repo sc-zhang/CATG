@@ -141,12 +141,12 @@
            </property>
            <item>
             <property name="text">
-             <string>Insert before</string>
+             <string>Insert front</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Insert after</string>
+             <string>Insert back</string>
             </property>
            </item>
            <item>
@@ -271,7 +271,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

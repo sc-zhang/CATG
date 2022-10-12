@@ -7,10 +7,11 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 ### Software
 * [jcvi](https://github.com/tanghaibao/jcvi)
 * [ALLHiC](https://github.com/tangerzhang/ALLHiC)
-* Python 3.6+
+* Python 3.7+
 
 ## Python Modules
 * PySide2
+* qt-material
 * matplotlib
 
 ## Installation

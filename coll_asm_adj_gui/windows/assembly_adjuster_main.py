@@ -14,7 +14,6 @@ class AssemblyAdjusterMain(QWidget):
         super(AssemblyAdjusterMain, self).__init__()
         self.ui = None
         self.main_window = None
-        self.statusbar_label = None
         self.graph_scene = None
 
         self.qry_bed_file = ""
@@ -60,17 +59,12 @@ class AssemblyAdjusterMain(QWidget):
         self.ui.src_chr_cbox.currentTextChanged.connect(self.__add_src_blks)
         self.ui.tgt_chr_cbox.currentTextChanged.connect(self.__add_tgt_blks)
 
-        self.statusbar_label = QLabel("Ready.")
-        self.ui.statusbar.addWidget(self.statusbar_label)
-
     def load_files(self):
-        self.statusbar_label.setText("Loading files...")
         file_loader = file_loader_dialog.FileLoaderDialog(self)
         file_loader.show()
         file_loader.signal_path.connect(self.get_file_path)
 
     def save_files(self):
-        self.statusbar_label.setText("Saving tours")
         folder_path = QFileDialog.getExistingDirectory(self.ui, "Select folder")
         if folder_path and path.isdir(folder_path):
             for chrn in self.qry_agp_db:
@@ -80,7 +74,6 @@ class AssemblyAdjusterMain(QWidget):
                     for _, _, ctg, _, direct in self.qry_agp_db[chrn]:
                         tour_list.append("%s%s" % (ctg, direct))
                     fout.write("%s" % ' '.join(tour_list))
-        self.statusbar_label.setText("Success")
 
     def show_pic(self):
         blk_loc = locator.Locator()
@@ -123,10 +116,6 @@ class AssemblyAdjusterMain(QWidget):
             self.__add_options()
             self.show_pic()
 
-            self.statusbar_label.setText("All file loaded.")
-        else:
-            self.statusbar_label.setText("Not all files selected.")
-
     def modify(self):
         self.ui.mod_btn.setEnabled(False)
         src_chr = self.ui.src_chr_cbox.currentText()
@@ -137,21 +126,18 @@ class AssemblyAdjusterMain(QWidget):
         is_rev = self.ui.rev_chk.isChecked()
 
         if opt == "Source chromosome" and is_rev:
-            self.statusbar_label.setText("Reversing chromosome: %s" % src_chr)
             tmp_dict = deepcopy(self.qry_agp_db)
             tmp_dict[src_chr] = self.adjuster.reverse_chr(tmp_dict[src_chr])
             self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
             self.qry_agp_db = deepcopy(tmp_dict)
             del tmp_dict
         elif opt == "Source block" and is_rev:
-            self.statusbar_label.setText("Reversing block: %s %s" % (src_chr, src_blk))
             tmp_dict = deepcopy(self.qry_agp_db)
             tmp_dict[src_chr] = self.adjuster.reverse_block(tmp_dict[src_chr], self.block_regions[src_blk])
             self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
             self.qry_agp_db = deepcopy(tmp_dict)
             del tmp_dict
         elif opt == "Insert head":
-            self.statusbar_label.setText("Inserting chromosome %s to %s's head" % (src_chr, tgt_chr))
             tmp_dict = deepcopy(self.qry_agp_db)
             tmp_dict[src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[src_chr],
                                                                             self.block_regions[src_blk])
@@ -163,7 +149,6 @@ class AssemblyAdjusterMain(QWidget):
             self.qry_agp_db = deepcopy(tmp_dict)
             del tmp_dict
         elif opt == "Insert tail":
-            self.statusbar_label.setText("Inserting chromosome %s to %s's tail" % (src_chr, tgt_chr))
             tmp_dict = deepcopy(self.qry_agp_db)
             tmp_dict[src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[src_chr],
                                                                             self.block_regions[src_blk])
@@ -174,8 +159,7 @@ class AssemblyAdjusterMain(QWidget):
             self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
             self.qry_agp_db = deepcopy(tmp_dict)
             del tmp_dict
-        elif opt == "Insert before":
-            self.statusbar_label.setText("Inserting block %s %s before %s %s" % (src_chr, src_blk, tgt_chr, tgt_blk))
+        elif opt == "Insert front":
             tmp_dict = deepcopy(self.qry_agp_db)
             tmp_dict[src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[src_chr],
                                                                             self.block_regions[src_blk])
@@ -186,8 +170,7 @@ class AssemblyAdjusterMain(QWidget):
             self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
             self.qry_agp_db = deepcopy(tmp_dict)
             del tmp_dict
-        elif opt == "Insert after":
-            self.statusbar_label.setText("Inserting block %s %s after %s %s" % (src_chr, src_blk, tgt_chr, tgt_blk))
+        elif opt == "Insert back":
             tmp_dict = deepcopy(self.qry_agp_db)
             tmp_dict[src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[src_chr],
                                                                             self.block_regions[src_blk])
@@ -202,7 +185,6 @@ class AssemblyAdjusterMain(QWidget):
 
         self.show_pic()
         self.ui.mod_btn.setEnabled(True)
-        self.statusbar_label.setText("Success")
 
     def __load_file(self):
         self.qry_bed_reader.read_bed(self.qry_bed_file)
