@@ -63,6 +63,14 @@ We can move block 1 to the end of Chr01 with reverse complement.
 If you want executable file, please use pyinstaller, and run commands below
 ```bash
 pip install pyinstaller
+# For unix-like system
 pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/ui/MCAAG.ico" --hidden-import PySide2.QtXml --add-data "coll_asm_adj_gui/ui:coll_asm_adj_gui/ui" -F -w
+# For windows
+pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/ui/MCAAG.ico" --hidden-import PySide2.QtXml --add-data "coll_asm_adj_gui/ui;coll_asm_adj_gui/ui" -F -w
+```
+You can also use nuitka to do samething, the parameters may need modified for building.
+```bash
+pip install nuitka
+nuitka --standalone --windows-disable-console --mingw64 --nofollow-imports --show-memory --show-progress --plugin-enable=pyside2,numpy --follow-import-to=need --include-data-dir="/path/to/MCAAG/coll_asm_adj_gui/ui"="coll_asm_adj_gui/ui" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/ui/MCAAG.ico" --onefile MCAAG.py
 ```
 After all done, copy MCAAG in dist folder to anywhere with same platform to use it.
