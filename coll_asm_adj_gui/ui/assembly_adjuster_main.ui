@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QGraphicsView" name="plot_viewer"/>
       </item>
@@ -29,7 +29,54 @@
          </sizepolicy>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="1" column="0" colspan="2">
+         <item row="0" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QPushButton" name="file_loader_btn">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Load files</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="file_save_btn">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Save files</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
           <widget class="QLabel" name="label">
            <property name="font">
             <font>
@@ -41,14 +88,14 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
+         <item row="1" column="1">
           <widget class="QComboBox" name="src_chr_cbox">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="0" colspan="2">
+         <item row="2" column="0">
           <widget class="QLabel" name="label_3">
            <property name="font">
             <font>
@@ -60,14 +107,14 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
+         <item row="2" column="1">
           <widget class="QComboBox" name="src_blk_cbox">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0" colspan="2">
+         <item row="3" column="0">
           <widget class="QLabel" name="label_2">
            <property name="font">
             <font>
@@ -79,14 +126,14 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
+         <item row="3" column="1">
           <widget class="QComboBox" name="tgt_chr_cbox">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="4" column="0" colspan="2">
+         <item row="4" column="0">
           <widget class="QLabel" name="label_4">
            <property name="font">
             <font>
@@ -98,14 +145,14 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
+         <item row="4" column="1">
           <widget class="QComboBox" name="tgt_blk_cbox">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="5" column="0" colspan="2">
+         <item row="5" column="0">
           <widget class="QLabel" name="label_5">
            <property name="font">
             <font>
@@ -117,7 +164,7 @@
            </property>
           </widget>
          </item>
-         <item row="5" column="2">
+         <item row="5" column="1">
           <widget class="QLineEdit" name="resolution_text">
            <property name="text">
             <string>20</string>
@@ -134,7 +181,7 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="2">
+         <item row="6" column="1">
           <widget class="QComboBox" name="method_cbox">
            <property name="enabled">
             <bool>false</bool>
@@ -171,7 +218,7 @@
            </item>
           </widget>
          </item>
-         <item row="7" column="0" colspan="3">
+         <item row="7" column="0" colspan="2">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QPushButton" name="refresh_btn">
@@ -220,49 +267,6 @@
             </widget>
            </item>
           </layout>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="file_save_btn">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Save files</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" colspan="2">
-          <widget class="QPushButton" name="file_loader_btn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Load files</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </widget>

@@ -71,6 +71,10 @@ pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/ui/MCAAG.ico" --hidden-imp
 You can also use nuitka to do samething, the parameters may need modified for building.
 ```bash
 pip install nuitka
-nuitka --standalone --windows-disable-console --mingw64 --nofollow-imports --show-memory --show-progress --plugin-enable=pyside2,numpy --follow-import-to=need --include-data-dir="/path/to/MCAAG/coll_asm_adj_gui/ui"="coll_asm_adj_gui/ui" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/ui/MCAAG.ico" --onefile MCAAG.py
+pip install zstandard # for compress
+# For unix-like system
+nuitka --standalone --windows-disable-console --show-memory --show-progress --plugin-enable=pyside2,numpy --follow-import-to=need --include-data-dir="coll_asm_adj_gui/ui"="coll_asm_adj_gui/ui" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/ui/MCAAG.ico" --onefile MCAAG.py
+# For windows
+nuitka --standalone --windows-disable-console --mingw64 --show-memory --show-progress --plugin-enable=pyside2,numpy --follow-import-to=need --include-data-dir="coll_asm_adj_gui/ui"="coll_asm_adj_gui/ui" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/ui/MCAAG.ico" --onefile MCAAG.py
 ```
 After all done, copy MCAAG in dist folder to anywhere with same platform to use it.
