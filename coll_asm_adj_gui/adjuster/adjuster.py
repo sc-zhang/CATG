@@ -31,9 +31,7 @@ class Adjuster:
 
             match_ctg = Adjuster.get_gene_ctg(ori_agp_db[chrn], gsp, gep)
 
-            if not match_ctg:
-                print(gid)
-            else:
+            if match_ctg:
                 csp, cep, tig, _, tdir = match_ctg
                 nchrn, nsp, nep, nctg_len, ndir = cov_adj_agp_db[tig]
 
@@ -97,7 +95,7 @@ class Adjuster:
 
         for _ in agp_list[end_idx+1:]:
             adj_agp_list.append(_)
-            base += _[3] + 100
+            base += _[3]+100
 
         return adj_agp_list
 
@@ -105,13 +103,12 @@ class Adjuster:
     def split_block(agp_list, pos):
         start_idx, _, end_idx, _ = pos
         adj_agp_list = []
-        extract_agp_list = []
 
         base = 1
 
         for _ in agp_list[:start_idx]:
             adj_agp_list.append(_)
-            base += _[3] + 100
+            base += _[3]+100
 
         extract_agp_list = agp_list[start_idx: end_idx+1]
 
@@ -119,7 +116,7 @@ class Adjuster:
             _[0] = base
             _[1] = base+_[3]-1
             adj_agp_list.append(_)
-            base += _[3] + 100
+            base += _[3]+100
 
         return adj_agp_list, extract_agp_list
 
@@ -155,4 +152,76 @@ class Adjuster:
                 _[1] = base+_[3]-1
                 adj_agp_list.append(_)
                 base += _[3]+100
+        return adj_agp_list
+
+    @staticmethod
+    def swap_blk_diff_chr(src_list, src_pos, tgt_list, tgt_pos):
+        src_start_idx, _, src_end_idx, _ = src_pos
+        tgt_start_idx, _, tgt_end_idx, _ = tgt_pos
+
+        src_base = 1
+        tgt_base = 1
+
+        src_adj_agp_list = []
+        tgt_adj_agp_list = []
+
+        for _ in src_list[:src_start_idx]:
+            src_adj_agp_list.append(_)
+            src_base += _[3]+100
+
+        for _ in tgt_list[:tgt_start_idx]:
+            tgt_adj_agp_list.append(_)
+            tgt_base += _[3]+100
+
+        for _ in src_list[src_start_idx: src_end_idx+1]:
+            _[0] = tgt_base
+            _[1] = tgt_base+_[3]-1
+            tgt_adj_agp_list.append(_)
+            tgt_base += _[3]+100
+
+        for _ in tgt_list[tgt_start_idx: tgt_end_idx+1]:
+            _[0] = src_base
+            _[1] = src_base+_[3]-1
+            src_adj_agp_list.append(_)
+            src_base += _[3]+100
+
+        for _ in src_list[src_end_idx+1:]:
+            _[0] = src_base
+            _[1] = src_base+_[3]-1
+            src_adj_agp_list.append(_)
+            src_base += _[3]+100
+
+        for _ in tgt_list[tgt_end_idx+1:]:
+            _[0] = tgt_base
+            _[1] = tgt_base+_[3]-1
+            tgt_adj_agp_list.append(_)
+            tgt_base += _[3]+100
+
+        return src_adj_agp_list, tgt_adj_agp_list
+
+    @staticmethod
+    def swap_blk_single_chr(agp_list, src_pos, tgt_pos):
+        src_start_idx, _, src_end_idx, _ = src_pos
+        tgt_start_idx, _, tgt_end_idx, _ = tgt_pos
+        if src_start_idx > tgt_start_idx:
+            src_start_idx, tgt_start_idx = tgt_start_idx, src_start_idx
+            src_end_idx, tgt_end_idx = tgt_end_idx, src_end_idx
+
+        if min(src_end_idx, tgt_end_idx) >= max(src_start_idx, tgt_start_idx):
+            return []
+
+        order = [agp_list[:src_start_idx],
+                 agp_list[tgt_start_idx: tgt_end_idx+1],
+                 agp_list[src_end_idx+1: tgt_start_idx],
+                 agp_list[src_start_idx: src_end_idx+1],
+                 agp_list[tgt_end_idx+1:]]
+
+        adj_agp_list = []
+        base = 1
+        for cur_list in order:
+            for _ in cur_list:
+                _[0] = base
+                _[1] = base + _[3] - 1
+                adj_agp_list.append(_)
+                base += _[3] + 100
         return adj_agp_list

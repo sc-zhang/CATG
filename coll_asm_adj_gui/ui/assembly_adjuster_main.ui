@@ -186,36 +186,6 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
-           <item>
-            <property name="text">
-             <string>Insert front</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Insert back</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Insert head</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Insert tail</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Source chromosome</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Source block</string>
-            </property>
-           </item>
           </widget>
          </item>
          <item row="7" column="0" colspan="2">

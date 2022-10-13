@@ -1,11 +1,11 @@
 class Reader:
 
     def __init__(self):
-        self.chr_list = []
-        self.gene_pairs = []
-        self.dict = {}
+        pass
 
-    def read_bed(self, bed_file):
+    @staticmethod
+    def read_bed(bed_file):
+        dict = {}
         chr_set = set()
         with open(bed_file, 'r') as fin:
             for line in fin:
@@ -19,11 +19,12 @@ class Reader:
                     sp, ep = ep, sp
                     direct = '-'
                 gene = data[3]
-                self.dict[gene] = [chrn, sp, ep, direct]
-        self.chr_list = sorted(chr_set)
+                dict[gene] = [chrn, sp, ep, direct]
+        return sorted(chr_set), dict
 
-    def read_agp(self, in_agp):
-        idx = 0
+    @staticmethod
+    def read_agp(in_agp):
+        dict = {}
         with open(in_agp, 'r') as fin:
             for line in fin:
                 data = line.strip().split()
@@ -35,14 +36,18 @@ class Reader:
                 ctg = data[5]
                 ctg_len = int(data[7])
                 direct = data[-1]
-                if chr_x not in self.dict:
-                    self.dict[chr_x] = []
-                self.dict[chr_x].append([sp, ep, ctg, ctg_len, direct])
+                if chr_x not in dict:
+                    dict[chr_x] = []
+                dict[chr_x].append([sp, ep, ctg, ctg_len, direct])
+        return dict
 
-    def read_anchors(self, in_anchors):
+    @staticmethod
+    def read_anchors(in_anchors):
+        gene_pairs = []
         with open(in_anchors, 'r') as fin:
             for line in fin:
                 if len(line.strip()) == 0 or line[0] == '#':
                     continue
                 data = line.strip().split()
-                self.gene_pairs.append([data[0], data[1]])
+                gene_pairs.append([data[0], data[1]])
+        return gene_pairs

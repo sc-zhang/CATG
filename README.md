@@ -50,8 +50,13 @@ There are 6 type of operate can be done.
 4. **Insert tail**  
    Move block with source block id from source chromosome to target chromosome and insert it to the tail of target chromosome.  
    _Operate 1-4 can work with Reverse checkbox, if Reverse checkbox is set checked, the block from source chromosome will be reverse complement before insert to target positiong._
-5. **Source chromosome** 6. **Source block**
+5. **Source chromosome**
+6. **Source block**  
    These two operate only affect while Reverse checkbox is set checked, then it will reverse the source chromosome or source block.
+7. **Swap chromosome**
+8. **Swap block**  
+   These two operate can swap regions or chromosomes, and Reverse option won't affect.
+
 
 For example:
 ![](Manual/Loaded.png "Data loaded")
