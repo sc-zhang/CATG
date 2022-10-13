@@ -2,6 +2,7 @@ from os import path
 import sys
 from coll_asm_adj_gui.windows import file_loader_dialog
 from coll_asm_adj_gui.io import file_reader, resources_loader
+from coll_asm_adj_gui.ui import ui_assembly_adjuster_main
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
 from PySide2.QtWidgets import QWidget, QGraphicsScene, QFileDialog
@@ -62,11 +63,15 @@ class AssemblyAdjusterMain(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        main_ui_file = resources_loader.resource_path("coll_asm_adj_gui/ui/assembly_adjuster_main.ui")
+        """
+        main_ui_file = resources_loader.resource_path("coll_asm_adj_gui/ui/assembly_adjuster_main2.ui")
         qfile_file_loader = QFile(main_ui_file)
         qfile_file_loader.open(QFile.ReadOnly)
         qfile_file_loader.close()
         self.ui = QUiLoader().load(qfile_file_loader)
+        """
+        self.ui = ui_assembly_adjuster_main.Ui_AssemblyAdjusterMain()
+        self.ui.setupUi(self)
 
         self.ui.method_cbox.addItems(self.opt_method_db.keys())
         self.ui.file_loader_btn.clicked.connect(self.load_files)
@@ -323,10 +328,9 @@ class AssemblyAdjusterMain(QWidget):
         if value:
             self.ui.blk_lst.addItems(self.block_detail[int(value) - 1])
 
-    def show(self):
-        self.ui.show()
-
     def __notify_with_title(self, info=""):
+        print("test")
+        return
         if info:
             self.ui.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
         else:
