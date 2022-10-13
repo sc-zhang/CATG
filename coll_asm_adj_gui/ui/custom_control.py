@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QGraphicsView, QGraphicsScene
+from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QLineEdit
 from PySide2.QtCore import Qt, QPoint
 
 
@@ -64,3 +64,25 @@ class ControlGraphicsScene(QGraphicsScene):
     def mouseReleaseEvent(self, e):
         if e.button() == Qt.LeftButton:
             self.__left_click = False
+
+
+class DragLineEdit(QLineEdit):
+
+    def __init__(self, file_filter, parent=None):
+        super(DragLineEdit, self).__init__(parent)
+        self.__file_filter = file_filter.lower()
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasUrls():
+            cur_file = event.mimeData().urls()[0].toLocalFile()
+            if cur_file.split('.')[-1].lower() == self.__file_filter:
+                self.setText(cur_file)
+            event.accept()
+        else:
+            event.ignore()

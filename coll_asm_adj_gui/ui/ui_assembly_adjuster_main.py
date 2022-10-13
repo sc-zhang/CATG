@@ -11,7 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-from coll_asm_adj_gui.ui.control_graphics_view import ControlGraphicsView
+from coll_asm_adj_gui.ui.custom_control import ControlGraphicsView
 
 class Ui_AssemblyAdjusterMain(object):
     def setupUi(self, AssemblyAdjusterMain):

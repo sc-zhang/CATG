@@ -11,6 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from coll_asm_adj_gui.ui.custom_control import DragLineEdit
 
 
 class Ui_FileLoaderDialog(object):
@@ -40,7 +41,7 @@ class Ui_FileLoaderDialog(object):
 
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
-        self.qry_bed_text = QLineEdit(FileLoaderDialog)
+        self.qry_bed_text = DragLineEdit("bed", FileLoaderDialog)
         self.qry_bed_text.setObjectName(u"qry_bed_text")
         self.qry_bed_text.setMinimumSize(QSize(0, 0))
         self.qry_bed_text.setDragEnabled(True)
@@ -64,7 +65,7 @@ class Ui_FileLoaderDialog(object):
 
         self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
 
-        self.ref_bed_text = QLineEdit(FileLoaderDialog)
+        self.ref_bed_text = DragLineEdit("bed", FileLoaderDialog)
         self.ref_bed_text.setObjectName(u"ref_bed_text")
         self.ref_bed_text.setMinimumSize(QSize(0, 0))
         self.ref_bed_text.setDragEnabled(True)
@@ -85,7 +86,7 @@ class Ui_FileLoaderDialog(object):
 
         self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
 
-        self.anchors_text = QLineEdit(FileLoaderDialog)
+        self.anchors_text = DragLineEdit("anchors", FileLoaderDialog)
         self.anchors_text.setObjectName(u"anchors_text")
         self.anchors_text.setMinimumSize(QSize(0, 0))
         self.anchors_text.setDragEnabled(True)
@@ -106,7 +107,7 @@ class Ui_FileLoaderDialog(object):
 
         self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
 
-        self.qry_agp_text = QLineEdit(FileLoaderDialog)
+        self.qry_agp_text = DragLineEdit("agp", FileLoaderDialog)
         self.qry_agp_text.setObjectName(u"qry_agp_text")
         self.qry_agp_text.setMinimumSize(QSize(0, 0))
         self.qry_agp_text.setDragEnabled(True)

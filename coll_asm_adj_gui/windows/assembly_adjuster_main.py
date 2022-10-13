@@ -2,7 +2,7 @@ from os import path
 import sys
 from coll_asm_adj_gui.windows import file_loader_dialog
 from coll_asm_adj_gui.io import file_reader
-from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, control_graphics_view
+from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, custom_control
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
 from PySide2.QtWidgets import QWidget, QFileDialog
@@ -124,7 +124,7 @@ class AssemblyAdjusterMain(QWidget):
         if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
             self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
         if not self.graph_scene:
-            self.graph_scene = control_graphics_view.ControlGraphicsScene()
+            self.graph_scene = custom_control.ControlGraphicsScene()
             self.graph_scene.addWidget(self.mpl_vis.figure_content)
             self.ui.plot_viewer.setScene(self.graph_scene)
             self.ui.plot_viewer.show()
