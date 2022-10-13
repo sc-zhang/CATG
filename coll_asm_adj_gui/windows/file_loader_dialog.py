@@ -29,6 +29,7 @@ class FileLoaderDialog(QDialog):
         self.ui.anchors_btn.clicked.connect(self.load_anchors)
         self.ui.qry_agp_btn.clicked.connect(self.load_qry_agp)
         self.ui.check_btn.button(QDialogButtonBox.Ok).clicked.connect(self.send_path)
+        self.ui.check_btn.button(QDialogButtonBox.Cancel).clicked.connect(self.send_cancel)
 
     def load_qry_bed(self):
         self.qry_bed_file = QFileDialog.getOpenFileName(self.ui, "Select query bed file",
@@ -57,6 +58,9 @@ class FileLoaderDialog(QDialog):
         self.qry_agp_file = self.ui.qry_agp_text.text()
         content = [self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file]
         self.signal_path.emit(content)
+
+    def send_cancel(self):
+        self.signal_path.emit(None)
 
     def show(self):
         self.ui.show()

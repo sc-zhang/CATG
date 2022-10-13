@@ -9,7 +9,7 @@ from coll_asm_adj_gui.adjuster.locator import euc_dist
 class VisCanvas(FigureCanvas):
 
     def __init__(self, parent=None):
-        fig = plt.figure(figsize=(10, 10), dpi=300, tight_layout=True)
+        fig = plt.figure(figsize=(10, 10), dpi=300, tight_layout=True, facecolor="#FFF2E2")
         self.plt = plt
         super(VisCanvas, self).__init__(fig)
 
@@ -99,8 +99,6 @@ class VisContent:
         block_x = []
         block_y = []
 
-        chry_block_cnt = {}
-        block_in_chr = {}
         idx = 0
 
         self.block_list_db = {}
@@ -115,15 +113,10 @@ class VisContent:
                             euc_dist([0, 0], [chr_len_db[chrx], chr_len_db[chry]]) < 1:
                         continue
 
-                    block_in_chr[idx] = [chrx, chry]
                     idx += 1
                     if chrx not in self.block_list_db:
                         self.block_list_db[chrx] = []
                     self.block_list_db[chrx].append(str(idx))
-
-                    if chry not in chry_block_cnt:
-                        chry_block_cnt[chry] = 0
-                    chry_block_cnt[chry] += 1
 
                     block_x.append([x1 + offset_db[chrx], x2 + offset_db[chrx]])
                     rstart = self.__get_ctg_pos(agp_db[chrx], x1)
@@ -132,7 +125,6 @@ class VisContent:
                         print(rstart, rend)
                     ctg1 = agp_db[chrx][rstart][2]
                     ctg2 = agp_db[chrx][rend][2]
-
                     self.block_regions.append([rstart, ctg1, rend, ctg2])
                     block_y.append([y1 + offset_db[chry], y2 + offset_db[chry]])
 
@@ -187,21 +179,22 @@ class VisContent:
         offset_y_list.append(base_y)
 
         self.figure_content.plt.plot(data_x, data_y, linestyle='', color='black', marker='o', markersize=0.5)
-        block_offset_db = {}
 
         for i in range(0, len(block_x)):
-            cur_chrx, cur_chry = block_in_chr[i]
-            if cur_chry not in block_offset_db:
-                block_offset_db[cur_chry] = 0
-            block_offset_db[cur_chry] += 1
-
             block_pos = [(block_x[i][0] + block_x[i][1]) / 2.0, (block_y[i][0] + block_y[i][1]) / 2.0]
 
             self.figure_content.plt.plot(block_x[i], block_y[i], linestyle='-', color='orange', linewidth=0.5,
                                          markersize=0)
-            self.figure_content.plt.annotate(i + 1,
+            self.figure_content.plt.annotate(i+1,
                                              xy=block_pos,
-                                             fontsize=8, color='skyblue', ha='right')
+                                             bbox=dict(
+                                                 boxstyle="circle,pad=0",
+                                                 fc="white",
+                                                 ec="black",
+                                                 alpha=0.5,
+                                                 lw=1
+                                             ),
+                                             fontsize=8, color='blue', ha='right')
 
         self.figure_content.plt.xlim([0, max_x])
         self.figure_content.plt.ylim([0, max_y])
@@ -210,6 +203,7 @@ class VisContent:
         self.figure_content.plt.xlabel(qry_name)
         self.figure_content.plt.ylabel(ref_name)
         ax = self.figure_content.plt.gca()
+        ax.set_facecolor("#FFF2E2")
         ax.set_xticklabels(x_labels, rotation=45)
         ax.set_yticklabels(y_labels, rotation=0)
         ax.xaxis.set_ticks_position('top')

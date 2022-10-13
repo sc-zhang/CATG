@@ -1,4 +1,5 @@
 from os import path
+import sys
 from coll_asm_adj_gui.windows import file_loader_dialog
 from coll_asm_adj_gui.io import file_reader, resources_loader
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
@@ -76,10 +77,12 @@ class AssemblyAdjusterMain(QWidget):
 
     def load_files(self):
         file_loader = file_loader_dialog.FileLoaderDialog(self)
+        self.__notify_with_title("Select files")
         file_loader.show()
         file_loader.signal_path.connect(self.get_file_path)
 
     def save_files(self):
+        self.__notify_with_title("Saving files")
         folder_path = QFileDialog.getExistingDirectory(self.ui, "Select folder")
         if folder_path and path.isdir(folder_path):
             for chrn in self.qry_agp_db:
@@ -89,6 +92,7 @@ class AssemblyAdjusterMain(QWidget):
                     for _, _, ctg, _, direct in self.qry_agp_db[chrn]:
                         tour_list.append("%s%s" % (ctg, direct))
                     fout.write("%s" % ' '.join(tour_list))
+        self.__notify_with_title()
 
     def show_pic(self):
         blk_loc = locator.Locator()
@@ -123,13 +127,21 @@ class AssemblyAdjusterMain(QWidget):
             self.graph_viewer.figure_content.draw()
 
     def get_file_path(self, content):
-        self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file = content
-        if path.isfile(self.qry_bed_file) and path.isfile(self.ref_bed_file) and \
-                path.isfile(self.anchors_file) and path.isfile(self.qry_agp_file):
-            self.__enable_controls()
-            self.__load_file()
-            self.__add_options()
-            self.show_pic()
+        if content:
+            self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file = content
+            if path.isfile(self.qry_bed_file) and path.isfile(self.ref_bed_file) and \
+                    path.isfile(self.anchors_file) and path.isfile(self.qry_agp_file):
+
+                self.__notify_with_title("Loading files")
+                self.__enable_controls()
+                self.__load_file()
+                self.__add_options()
+                self.show_pic()
+                self.__notify_with_title("Files loaded")
+            else:
+                self.__notify_with_title()
+        else:
+            self.__notify_with_title()
 
     def modify(self):
         self.ui.mod_btn.setEnabled(False)
@@ -142,11 +154,15 @@ class AssemblyAdjusterMain(QWidget):
         args.is_rev = self.ui.rev_chk.isChecked()
         opt = self.ui.method_cbox.currentText()
 
+        self.__notify_with_title(opt)
+
         if opt in self.opt_method_db:
             self.opt_method_db[opt](args)
 
             self.show_pic()
             self.ui.mod_btn.setEnabled(True)
+
+        self.__notify_with_title("Success")
 
     def __rev_chr(self, args):
         if not args.is_rev:
@@ -166,14 +182,14 @@ class AssemblyAdjusterMain(QWidget):
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
-    def __ins_head(self, src_chr, src_blk, tgt_chr, is_rev):
+    def __ins_head(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[src_chr],
-                                                                        self.block_regions[src_blk])
-        if is_rev:
+        tmp_dict[args.src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[args.src_chr],
+                                                                        self.block_regions[args.src_blk])
+        if args.is_rev:
             extract_agp_list = self.adjuster.reverse_chr(extract_agp_list)
 
-        tmp_dict[tgt_chr] = self.adjuster.ins_term(tmp_dict[tgt_chr], extract_agp_list)
+        tmp_dict[args.tgt_chr] = self.adjuster.ins_term(tmp_dict[args.tgt_chr], extract_agp_list)
         self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
@@ -295,3 +311,9 @@ class AssemblyAdjusterMain(QWidget):
 
     def show(self):
         self.ui.show()
+
+    def __notify_with_title(self, info=""):
+        if info:
+            self.ui.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
+        else:
+            self.ui.setWindowTitle("Manual Collinearity Assembly Adjuster")

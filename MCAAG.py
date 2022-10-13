@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 from PySide2.QtWidgets import QApplication
 from PySide2.QtGui import QIcon
 from PySide2.QtCore import QCoreApplication, Qt
@@ -15,4 +16,4 @@ if __name__ == "__main__":
     main_window = AssemblyAdjusterMain()
     apply_stylesheet(app, theme="dark_teal.xml")
     main_window.show()
-    app.exec_()
+    sys.exit(app.exec_())
