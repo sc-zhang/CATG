@@ -8,7 +8,7 @@ from coll_asm_adj_gui.adjuster.locator import euc_dist
 
 class VisCanvas(FigureCanvas):
 
-    def __init__(self, parent=None):
+    def __init__(self):
         fig = plt.figure(figsize=(10, 10), dpi=300, tight_layout=True, facecolor="#FFF2E2")
         self.plt = plt
         super(VisCanvas, self).__init__(fig)
