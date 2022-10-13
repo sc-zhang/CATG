@@ -1,6 +1,5 @@
 from PySide2.QtWidgets import QDialog, QFileDialog, QDialogButtonBox
-from PySide2.QtUiTools import QUiLoader
-from PySide2.QtCore import QFile, Signal
+from PySide2.QtCore import Signal
 from coll_asm_adj_gui.ui.ui_file_loader_dialog import Ui_FileLoaderDialog
 
 
@@ -56,4 +55,7 @@ class FileLoaderDialog(QDialog):
         self.signal_path.emit(content)
 
     def send_cancel(self):
+        self.signal_path.emit(None)
+
+    def closeEvent(self, event):
         self.signal_path.emit(None)

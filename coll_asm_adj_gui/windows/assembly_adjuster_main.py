@@ -1,13 +1,11 @@
 from os import path
 import sys
 from coll_asm_adj_gui.windows import file_loader_dialog
-from coll_asm_adj_gui.io import file_reader, resources_loader
+from coll_asm_adj_gui.io import file_reader
 from coll_asm_adj_gui.ui import ui_assembly_adjuster_main
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
 from PySide2.QtWidgets import QWidget, QGraphicsScene, QFileDialog
-from PySide2.QtUiTools import QUiLoader
-from PySide2.QtCore import QFile
 
 
 class OptArgs:
@@ -63,13 +61,6 @@ class AssemblyAdjusterMain(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        """
-        main_ui_file = resources_loader.resource_path("coll_asm_adj_gui/ui/assembly_adjuster_main2.ui")
-        qfile_file_loader = QFile(main_ui_file)
-        qfile_file_loader.open(QFile.ReadOnly)
-        qfile_file_loader.close()
-        self.ui = QUiLoader().load(qfile_file_loader)
-        """
         self.ui = ui_assembly_adjuster_main.Ui_AssemblyAdjusterMain()
         self.ui.setupUi(self)
 
@@ -132,7 +123,7 @@ class AssemblyAdjusterMain(QWidget):
         if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
             self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
         if not self.graph_scene:
-            self.graph_scene = QGraphicsScene()
+            self.graph_scene = QGraphicsScene(self.ui.plot_viewer)
             self.graph_scene.addWidget(self.graph_viewer.figure_content)
             self.ui.plot_viewer.setScene(self.graph_scene)
             self.ui.plot_viewer.show()
@@ -329,9 +320,10 @@ class AssemblyAdjusterMain(QWidget):
             self.ui.blk_lst.addItems(self.block_detail[int(value) - 1])
 
     def __notify_with_title(self, info=""):
-        print("test")
-        return
         if info:
-            self.ui.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
+            self.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
         else:
-            self.ui.setWindowTitle("Manual Collinearity Assembly Adjuster")
+            self.setWindowTitle("Manual Collinearity Assembly Adjuster")
+
+    def closeEvent(self, event):
+        sys.exit(0)
