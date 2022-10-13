@@ -20,7 +20,7 @@ class Ui_AssemblyAdjusterMain(object):
         AssemblyAdjusterMain.resize(1936, 1147)
         self.gridLayout_2 = QGridLayout(AssemblyAdjusterMain)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.plot_viewer = ControlGraphicsView(AssemblyAdjusterMain)
+        self.plot_viewer = ControlGraphicsView(AssemblyAdjusterMain.graph_scene)
         self.plot_viewer.setObjectName(u"plot_viewer")
 
         self.gridLayout_2.addWidget(self.plot_viewer, 0, 0, 1, 1)

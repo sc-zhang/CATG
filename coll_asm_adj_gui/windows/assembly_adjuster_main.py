@@ -2,10 +2,10 @@ from os import path
 import sys
 from coll_asm_adj_gui.windows import file_loader_dialog
 from coll_asm_adj_gui.io import file_reader
-from coll_asm_adj_gui.ui import ui_assembly_adjuster_main
+from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, control_graphics_view
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
-from PySide2.QtWidgets import QWidget, QGraphicsScene, QFileDialog
+from PySide2.QtWidgets import QWidget, QFileDialog, QGraphicsScene
 
 
 class OptArgs:
@@ -53,7 +53,7 @@ class AssemblyAdjusterMain(QWidget):
         self.block_list_db = None
         self.block_detail = None
 
-        self.graph_viewer = vis.VisContent()
+        self.mpl_vis = vis.VisContent()
 
         self.adjuster = adjuster.Adjuster()
         self.reader = file_reader.Reader()
@@ -93,6 +93,7 @@ class AssemblyAdjusterMain(QWidget):
         self.__notify_with_title()
 
     def show_pic(self):
+        self.__notify_with_title("Drawing")
         blk_loc = locator.Locator()
         blk_loc.convert_anchors(self.qry_bed_db, self.ref_bed_db, self.gene_pairs)
         if self.ui.resolution_text.text():
@@ -104,12 +105,12 @@ class AssemblyAdjusterMain(QWidget):
             self.ui.resolution_text.setText("20")
         blk_loc.get_break_blocks(resolution)
 
-        self.graph_viewer.gen_figure(blk_loc.links, blk_loc.block_db, self.qry_agp_db, resolution,
-                                     self.qry_name, self.ref_name)
+        self.mpl_vis.gen_figure(blk_loc.links, blk_loc.block_db, self.qry_agp_db, resolution,
+                                self.qry_name, self.ref_name)
 
-        self.block_regions = self.graph_viewer.block_regions
-        self.block_list_db = self.graph_viewer.block_list_db
-        self.block_detail = self.graph_viewer.block_detail
+        self.block_regions = self.mpl_vis.block_regions
+        self.block_list_db = self.mpl_vis.block_list_db
+        self.block_detail = self.mpl_vis.block_detail
 
         self.ui.src_blk_cbox.clear()
         src_chr = self.ui.src_chr_cbox.currentText()
@@ -123,12 +124,13 @@ class AssemblyAdjusterMain(QWidget):
         if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
             self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
         if not self.graph_scene:
-            self.graph_scene = QGraphicsScene(self.ui.plot_viewer)
-            self.graph_scene.addWidget(self.graph_viewer.figure_content)
+            self.graph_scene = control_graphics_view.ControlGraphicsScene()#QGraphicsScene()
+            self.graph_scene.addWidget(self.mpl_vis.figure_content)
             self.ui.plot_viewer.setScene(self.graph_scene)
             self.ui.plot_viewer.show()
         else:
-            self.graph_viewer.figure_content.draw()
+            self.mpl_vis.figure_content.draw()
+        self.__notify_with_title("Success")
 
     def get_file_path(self, content):
         if content:
