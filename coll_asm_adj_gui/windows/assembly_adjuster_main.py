@@ -52,6 +52,7 @@ class AssemblyAdjusterMain(QWidget):
         self.qry_agp_db = None
         self.block_regions = None
         self.block_list_db = None
+        self.block_detail = None
 
         self.graph_viewer = vis.VisContent()
 
@@ -74,6 +75,7 @@ class AssemblyAdjusterMain(QWidget):
         self.ui.mod_btn.clicked.connect(self.modify)
         self.ui.src_chr_cbox.currentTextChanged.connect(self.__add_src_blks)
         self.ui.tgt_chr_cbox.currentTextChanged.connect(self.__add_tgt_blks)
+        self.ui.src_blk_cbox.currentTextChanged.connect(self.__add_blk_lst)
 
     def load_files(self):
         file_loader = file_loader_dialog.FileLoaderDialog(self)
@@ -111,10 +113,16 @@ class AssemblyAdjusterMain(QWidget):
 
         self.block_regions = self.graph_viewer.block_regions
         self.block_list_db = self.graph_viewer.block_list_db
+        self.block_detail = self.graph_viewer.block_detail
 
         self.ui.src_blk_cbox.clear()
-        if self.ui.src_chr_cbox.currentText() in self.block_list_db:
-            self.ui.src_blk_cbox.addItems(self.block_list_db[self.ui.src_chr_cbox.currentText()])
+        src_chr = self.ui.src_chr_cbox.currentText()
+        if src_chr in self.block_list_db:
+            self.ui.src_blk_cbox.addItems(self.block_list_db[src_chr])
+
+        self.ui.blk_lst.clear()
+        self.ui.blk_lst.addItems(self.block_detail[0])
+
         self.ui.tgt_blk_cbox.clear()
         if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
             self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
@@ -286,6 +294,7 @@ class AssemblyAdjusterMain(QWidget):
 
     def __enable_controls(self):
         self.ui.file_save_btn.setEnabled(True)
+        self.ui.blk_lst.setEnabled(True)
         self.ui.mod_btn.setEnabled(True)
         self.ui.refresh_btn.setEnabled(True)
         self.ui.src_chr_cbox.setEnabled(True)
@@ -308,6 +317,11 @@ class AssemblyAdjusterMain(QWidget):
         self.ui.tgt_blk_cbox.clear()
         if self.block_list_db and value in self.block_list_db:
             self.ui.tgt_blk_cbox.addItems(self.block_list_db[value])
+
+    def __add_blk_lst(self, value):
+        self.ui.blk_lst.clear()
+        if value:
+            self.ui.blk_lst.addItems(self.block_detail[int(value) - 1])
 
     def show(self):
         self.ui.show()

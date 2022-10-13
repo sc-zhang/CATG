@@ -20,6 +20,7 @@ class VisContent:
         self.chr_list_x = []
         self.chr_list_y = []
         self.block_list_db = {}
+        self.block_detail = []
         self.data_db = {}
         self.block_regions = []
         self.figure_content = VisCanvas()
@@ -102,6 +103,7 @@ class VisContent:
         idx = 0
 
         self.block_list_db = {}
+        self.block_detail = []
         self.block_regions = []
 
         for chrx in self.chr_list_x:
@@ -122,7 +124,10 @@ class VisContent:
                     rstart = self.__get_ctg_pos(agp_db[chrx], x1)
                     rend = self.__get_ctg_pos(agp_db[chrx], x2)
                     if rstart == -1 or rend == -1:
-                        print(rstart, rend)
+                        continue
+                    self.block_detail.append([])
+                    for _ in range(rstart, rend+1):
+                        self.block_detail[-1].append(agp_db[chrx][_][2])
                     ctg1 = agp_db[chrx][rstart][2]
                     ctg2 = agp_db[chrx][rend][2]
                     self.block_regions.append([rstart, ctg1, rend, ctg2])
