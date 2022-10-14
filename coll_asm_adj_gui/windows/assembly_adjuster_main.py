@@ -83,6 +83,7 @@ class AssemblyAdjusterMain(QWidget):
         self.__notify_with_title("Saving files")
         folder_path = QFileDialog.getExistingDirectory(self, "Select folder")
         if folder_path and path.isdir(folder_path):
+            self.__notify_with_title("Saving tour files")
             for chrn in self.qry_agp_db:
                 tour_file = path.join(folder_path, '%s.tour' % chrn)
                 with open(tour_file, 'w') as fout:
@@ -90,8 +91,19 @@ class AssemblyAdjusterMain(QWidget):
                     for _, _, ctg, _, direct in self.qry_agp_db[chrn]:
                         tour_list.append("%s%s" % (ctg, direct))
                     fout.write("%s" % ' '.join(tour_list))
+
+            self.__notify_with_title("Saving figure")
             fig_file = path.join(folder_path, "%s.%s.pdf" % (self.qry_name, self.ref_name))
             self.mpl_vis.figure_content.plt.savefig(fig_file, bbox_inches='tight')
+
+            self.__notify_with_title("Saving blocks")
+            block_file = path.join(folder_path, "contig_blocks.txt")
+            with open(block_file, 'w') as fout:
+                for chrn in sorted(self.mpl_vis.block_list_db):
+                    for idx in self.mpl_vis.block_list_db[chrn]:
+                        idx = int(idx)-1
+                        fout.write(">%s_Block_%d\n%s\n" % (chrn, idx+1, ' '.join(self.mpl_vis.block_detail[idx])))
+
         QMessageBox.information(self, "Save files", "Tour files saved.")
         self.__notify_with_title("Success")
 

@@ -127,7 +127,7 @@ class VisContent:
                         continue
                     self.block_detail.append([])
                     for _ in range(rstart, rend+1):
-                        self.block_detail[-1].append(agp_db[chrx][_][2])
+                        self.block_detail[-1].append(agp_db[chrx][_][2]+agp_db[chrx][_][4])
                     ctg1 = agp_db[chrx][rstart][2]
                     ctg2 = agp_db[chrx][rend][2]
                     self.block_regions.append([rstart, ctg1, rend, ctg2])
