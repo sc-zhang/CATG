@@ -28,18 +28,10 @@ python -m jcvi.compara.catalog ortholog query.bed reference.bed
 ```
 The query.bed, reference.bed, query.reference.anchors, query.agp are all files we need.
 
-### Step 1. Open main form
-![](Manual/MainForm.png "Main Form")
+## Operations
 
-Click "Load files" button
-### Step 2. Load files
-![](Manual/FileLoader.png "File Loader")
-
-Select all 4 required files.
-
-### Step 3. Adjust assembly manually
-
-There are 6 type of operate can be done.
+### Main operations
+There are 6 type of operations can be done.
 
 1. **Insert front**  
    Move block with source block id from source chromosome to target chromosome and insert it in front of target block.
@@ -57,12 +49,29 @@ There are 6 type of operate can be done.
 8. **Swap block**  
    These two operate can swap regions or chromosomes, and Reverse option won't affect.
 
+### Otherwise
+You can resize the collinearity figure with wheel, and use mouse to drag it.
 
-For example:
-![](Manual/Loaded.png "Data loaded")
+## Example
 
-We can move block 1 to the end of Chr01 with reverse complement.
-![](Manual/InsertBlock1ToTail.png "Insert block")
+### Step1. Open MCAAG and click "LOADFILES"
+![](Manual/Step1.LOAD_FILES.png "Main Form")
+
+### Step2. Select files
+![](Manual/Step2.Select_Files.png "Select Files")
+
+### Step3. Set Operations
+![](Manual/Step3.SetOperations.png "SetOperations")
+The red rectangles above means move Block 1 in Chromosome 1 to the tail of Chromosome 1, and reverse complement Block 1. 
+
+### Step4. Modify
+After click "MODIFY" button, the new collinearity figure will be updated, it may take several seconds, please be patient.
+![](Manual/Step4.Modified.png "Modify")
+
+### Step5. Refresh
+If you want clust less contigs in single block, increase Resolution value may help you.
+After that, click "REFRESH" button to update collinearity figure.
+![](Manual/Step5.Refresh.png "Refresh")
 
 ## Generate executable file
 If you want executable file, please use pyinstaller, and run commands below
