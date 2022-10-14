@@ -5,7 +5,7 @@ from coll_asm_adj_gui.io import file_reader
 from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, custom_control
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
-from PySide2.QtWidgets import QWidget, QFileDialog
+from PySide2.QtWidgets import QWidget, QFileDialog, QMessageBox
 
 
 class OptArgs:
@@ -81,7 +81,7 @@ class AssemblyAdjusterMain(QWidget):
 
     def save_files(self):
         self.__notify_with_title("Saving files")
-        folder_path = QFileDialog.getExistingDirectory(self.ui, "Select folder")
+        folder_path = QFileDialog.getExistingDirectory(self, "Select folder")
         if folder_path and path.isdir(folder_path):
             for chrn in self.qry_agp_db:
                 tour_file = path.join(folder_path, '%s.tour' % chrn)
@@ -90,7 +90,10 @@ class AssemblyAdjusterMain(QWidget):
                     for _, _, ctg, _, direct in self.qry_agp_db[chrn]:
                         tour_list.append("%s%s" % (ctg, direct))
                     fout.write("%s" % ' '.join(tour_list))
-        self.__notify_with_title()
+            fig_file = path.join(folder_path, "%s.%s.pdf" % (self.qry_name, self.ref_name))
+            self.mpl_vis.figure_content.plt.savefig(fig_file, bbox_inches='tight')
+        QMessageBox.information(self, "Save files", "Tour files saved.")
+        self.__notify_with_title("Success")
 
     def show_pic(self):
         self.__notify_with_title("Drawing")
@@ -137,16 +140,17 @@ class AssemblyAdjusterMain(QWidget):
             self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file = content
             if path.isfile(self.qry_bed_file) and path.isfile(self.ref_bed_file) and \
                     path.isfile(self.anchors_file) and path.isfile(self.qry_agp_file):
-
                 self.__notify_with_title("Loading files")
-                self.__enable_controls()
+
                 if self.__load_file():
                     self.__add_options()
                     self.show_pic()
                     self.__notify_with_title("Files loaded")
                 else:
+                    QMessageBox.critical(self, 'Error', 'Cannot load files, please check input files!')
                     self.__notify_with_title("Files load failed")
                     return
+                self.__enable_controls()
             else:
                 self.__notify_with_title()
         else:
@@ -318,6 +322,7 @@ class AssemblyAdjusterMain(QWidget):
         self.ui.tgt_blk_cbox.setEnabled(True)
         self.ui.method_cbox.setEnabled(True)
         self.ui.rev_chk.setEnabled(True)
+        self.ui.plot_viewer.setEnabled(True)
 
     def __add_options(self):
         self.ui.src_chr_cbox.addItems(self.qry_chr_list)
