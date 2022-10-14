@@ -62,7 +62,7 @@ You can resize the collinearity figure with wheel, and use mouse to drag it.
 
 ### Step3. Set Operations
 ![](Manual/Step3.SetOperations.png "SetOperations")
-The red rectangles above means move Block 1 in Chromosome 1 to the tail of Chromosome 1, and reverse complement Block 1. 
+The red rectangles above means move Block 1 in Chromosome 1 to the tail of Chromosome 1, and convert Block1 to its reverse complement. 
 
 ### Step4. Modify
 After click "MODIFY" button, the new collinearity figure will be updated, it may take several seconds, please be patient.
