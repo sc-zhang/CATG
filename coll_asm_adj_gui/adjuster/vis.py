@@ -1,8 +1,7 @@
 import matplotlib
+matplotlib.use("qt5agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
-
-matplotlib.use("qt5agg")
 from coll_asm_adj_gui.adjuster.locator import euc_dist
 
 
