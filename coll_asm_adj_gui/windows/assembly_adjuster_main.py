@@ -46,9 +46,11 @@ class AssemblyAdjusterMain(QWidget):
         self.qry_chr_list = []
 
         self.qry_bed_db = None
+        self.last_bed_db = None
         self.ref_bed_db = None
         self.gene_pairs = None
         self.qry_agp_db = None
+        self.last_agp_db = None
         self.block_regions = None
         self.block_list_db = None
         self.block_detail = None
@@ -58,28 +60,29 @@ class AssemblyAdjusterMain(QWidget):
         self.adjuster = adjuster.Adjuster()
         self.reader = file_reader.Reader()
 
-        self.init_ui()
+        self.__init_ui()
 
-    def init_ui(self):
+    def __init_ui(self):
         self.ui = ui_assembly_adjuster_main.Ui_AssemblyAdjusterMain()
         self.ui.setupUi(self)
 
         self.ui.method_cbox.addItems(self.opt_method_db.keys())
-        self.ui.file_loader_btn.clicked.connect(self.load_files)
-        self.ui.file_save_btn.clicked.connect(self.save_files)
-        self.ui.refresh_btn.clicked.connect(self.show_pic)
-        self.ui.mod_btn.clicked.connect(self.modify)
+        self.ui.file_loader_btn.clicked.connect(self.__load_file_loader)
+        self.ui.file_save_btn.clicked.connect(self.__save_files)
+        self.ui.refresh_btn.clicked.connect(self.__show_pic)
+        self.ui.undo_btn.clicked.connect(self.__undo_modify)
+        self.ui.mod_btn.clicked.connect(self.__modify)
         self.ui.src_chr_cbox.currentTextChanged.connect(self.__add_src_blks)
         self.ui.tgt_chr_cbox.currentTextChanged.connect(self.__add_tgt_blks)
         self.ui.src_blk_cbox.currentTextChanged.connect(self.__add_blk_lst)
 
-    def load_files(self):
+    def __load_file_loader(self):
         file_loader = file_loader_dialog.FileLoaderDialog(self)
         self.__notify_with_title("Select files")
         file_loader.show()
-        file_loader.signal_path.connect(self.get_file_path)
+        file_loader.signal_path.connect(self.__get_file_path)
 
-    def save_files(self):
+    def __save_files(self):
         self.__notify_with_title("Saving files")
         folder_path = QFileDialog.getExistingDirectory(self, "Select folder")
         if folder_path and path.isdir(folder_path):
@@ -107,7 +110,7 @@ class AssemblyAdjusterMain(QWidget):
         QMessageBox.information(self, "Save files", "Tour files saved.")
         self.__notify_with_title("Success")
 
-    def show_pic(self):
+    def __show_pic(self):
         self.__notify_with_title("Drawing")
         blk_loc = locator.Locator()
         blk_loc.convert_anchors(self.qry_bed_db, self.ref_bed_db, self.gene_pairs)
@@ -147,7 +150,7 @@ class AssemblyAdjusterMain(QWidget):
             self.mpl_vis.figure_content.draw()
         self.__notify_with_title("Success")
 
-    def get_file_path(self, content):
+    def __get_file_path(self, content):
         if content:
             self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file = content
             if path.isfile(self.qry_bed_file) and path.isfile(self.ref_bed_file) and \
@@ -156,7 +159,7 @@ class AssemblyAdjusterMain(QWidget):
 
                 if self.__load_file():
                     self.__add_options()
-                    self.show_pic()
+                    self.__show_pic()
                     self.__notify_with_title("Files loaded")
                 else:
                     QMessageBox.critical(self, 'Error', 'Cannot load files, please check input files!')
@@ -168,7 +171,7 @@ class AssemblyAdjusterMain(QWidget):
         else:
             self.__notify_with_title()
 
-    def modify(self):
+    def __modify(self):
         self.ui.mod_btn.setEnabled(False)
         args = OptArgs()
 
@@ -182,12 +185,28 @@ class AssemblyAdjusterMain(QWidget):
         self.__notify_with_title(opt)
 
         if opt in self.opt_method_db:
+            self.last_agp_db = deepcopy(self.qry_agp_db)
+            self.last_bed_db = deepcopy(self.qry_bed_db)
             self.opt_method_db[opt](args)
-
-            self.show_pic()
+            self.__show_pic()
             self.ui.mod_btn.setEnabled(True)
 
         self.__notify_with_title("Success")
+
+    def __undo_modify(self):
+        if self.last_agp_db:
+            self.__notify_with_title("Restoring last status")
+            tmp_db = deepcopy(self.qry_agp_db)
+            self.qry_agp_db = deepcopy(self.last_agp_db)
+            self.last_agp_db = deepcopy(tmp_db)
+            tmp_db = deepcopy(self.qry_bed_db)
+            self.qry_bed_db = deepcopy(self.last_bed_db)
+            self.last_bed_db = deepcopy(tmp_db)
+            del tmp_db
+            self.__show_pic()
+            self.__notify_with_title("Success")
+        else:
+            self.__notify_with_title("Unable restore")
 
     def __rev_chr(self, args):
         if not args.is_rev:
@@ -326,6 +345,7 @@ class AssemblyAdjusterMain(QWidget):
     def __enable_controls(self):
         self.ui.file_save_btn.setEnabled(True)
         self.ui.blk_lst.setEnabled(True)
+        self.ui.undo_btn.setEnabled(True)
         self.ui.mod_btn.setEnabled(True)
         self.ui.refresh_btn.setEnabled(True)
         self.ui.src_chr_cbox.setEnabled(True)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'assembly_adjuster_mainLCbbWw.ui'
+## Form generated from reading UI file 'assembly_adjuster_maineHSVsc.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.3
 ##
@@ -160,6 +160,15 @@ class Ui_AssemblyAdjusterMain(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.undo_btn = QPushButton(self.Frame)
+        self.undo_btn.setObjectName(u"undo_btn")
+        self.undo_btn.setEnabled(False)
+        sizePolicy2.setHeightForWidth(self.undo_btn.sizePolicy().hasHeightForWidth())
+        self.undo_btn.setSizePolicy(sizePolicy2)
+        self.undo_btn.setFont(font1)
+
+        self.horizontalLayout.addWidget(self.undo_btn)
+
         self.refresh_btn = QPushButton(self.Frame)
         self.refresh_btn.setObjectName(u"refresh_btn")
         self.refresh_btn.setEnabled(False)
@@ -233,9 +242,9 @@ class Ui_AssemblyAdjusterMain(object):
         self.rev_chk.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Reverse", None))
         self.label_6.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Contigs in current block:", None))
         self.label.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Source chromosome:", None))
+        self.undo_btn.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Undo", None))
         self.refresh_btn.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Refresh", None))
         self.mod_btn.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Modify", None))
         self.label_4.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Target block id:", None))
         self.label_7.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Operations:", None))
     # retranslateUi
-
