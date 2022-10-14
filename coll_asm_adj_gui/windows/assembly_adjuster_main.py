@@ -140,10 +140,13 @@ class AssemblyAdjusterMain(QWidget):
 
                 self.__notify_with_title("Loading files")
                 self.__enable_controls()
-                self.__load_file()
-                self.__add_options()
-                self.show_pic()
-                self.__notify_with_title("Files loaded")
+                if self.__load_file():
+                    self.__add_options()
+                    self.show_pic()
+                    self.__notify_with_title("Files loaded")
+                else:
+                    self.__notify_with_title("Files load failed")
+                    return
             else:
                 self.__notify_with_title()
         else:
@@ -284,11 +287,25 @@ class AssemblyAdjusterMain(QWidget):
             sep = '\\'
         self.qry_name = self.qry_bed_file.split(sep)[-1].split('.')[0]
         self.ref_name = self.ref_bed_file.split(sep)[-1].split('.')[0]
+        try:
+            self.qry_chr_list, self.qry_bed_db = self.reader.read_bed(self.qry_bed_file)
+            if not self.qry_bed_db:
+                return False
 
-        self.qry_chr_list, self.qry_bed_db = self.reader.read_bed(self.qry_bed_file)
-        _, self.ref_bed_db = self.reader.read_bed(self.ref_bed_file)
-        self.gene_pairs = self.reader.read_anchors(self.anchors_file)
-        self.qry_agp_db = self.reader.read_agp(self.qry_agp_file)
+            _, self.ref_bed_db = self.reader.read_bed(self.ref_bed_file)
+            if not self.ref_bed_db:
+                return False
+
+            self.gene_pairs = self.reader.read_anchors(self.anchors_file)
+            if not self.gene_pairs:
+                return False
+
+            self.qry_agp_db = self.reader.read_agp(self.qry_agp_file)
+            if not self.qry_agp_db:
+                return False
+        except IndexError:
+            return False
+        return True
 
     def __enable_controls(self):
         self.ui.file_save_btn.setEnabled(True)
