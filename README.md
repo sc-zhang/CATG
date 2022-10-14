@@ -21,7 +21,7 @@ cd /path/to/install/MCAAG
 python3 MCAAG.py
 ```
 
-## Usage
+## Data prepare
 Run jcvi for generating anchors file
 ```bash
 python -m jcvi.compara.catalog ortholog query.bed reference.bed
@@ -91,4 +91,26 @@ python -m nuitka --standalone --windows-disable-console --show-memory --show-pro
 # For windows
 python -m nuitka --standalone --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
 ```
-After all done, copy MCAAG in dist folder to anywhere with same platform to use it.
+
+### Environments have been tested for packing executable file
+Sometimes the executable file packed by nuitka may not work, the packages combination list below has been tested, may help build your own executable file.
+```bash
+Python==3.8.10
+PyInstaller==5.4.1
+Nuitka==1.1.2
+numpy==1.19.5
+matplotlib==3.4.3
+PySide2==5.15.2.1
+qt-material==2.12
+zstandard==0.18.0
+```
+```bash
+Python==3.10.8
+PyInstaller==5.5
+Nuitka==1.1.4
+numpy==1.23.4
+matplotlib==3.5.1
+PySide2==5.15.2.1
+qt-material==2.12
+zstandard==0.18.0
+```
