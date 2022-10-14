@@ -68,9 +68,8 @@ class ControlGraphicsScene(QGraphicsScene):
 
 class DragLineEdit(QLineEdit):
 
-    def __init__(self, file_filter, parent=None):
+    def __init__(self, parent=None):
         super(DragLineEdit, self).__init__(parent)
-        self.__file_filter = file_filter.lower()
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -80,9 +79,7 @@ class DragLineEdit(QLineEdit):
 
     def dropEvent(self, event):
         if event.mimeData().hasUrls():
-            cur_file = event.mimeData().urls()[0].toLocalFile()
-            if cur_file.split('.')[-1].lower() == self.__file_filter:
-                self.setText(cur_file)
+            self.setText(event.mimeData().urls()[0].toLocalFile())
             event.accept()
         else:
             event.ignore()

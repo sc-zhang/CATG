@@ -28,22 +28,22 @@ class FileLoaderDialog(QDialog):
 
     def load_qry_bed(self):
         self.qry_bed_file = QFileDialog.getOpenFileName(self, "Select query bed file",
-                                                        filter="bed file(*.bed)")[0]
+                                                        filter="bed files(*.bed);;all files(*.*)")[0]
         self.ui.qry_bed_text.setText(self.qry_bed_file)
 
     def load_ref_bed(self):
         self.ref_bed_file = QFileDialog.getOpenFileName(self, "Select reference bed file",
-                                                        filter="bed file(*.bed)")[0]
+                                                        filter="bed files(*.bed);;all files(*.*)")[0]
         self.ui.ref_bed_text.setText(self.ref_bed_file)
 
     def load_anchors(self):
         self.anchors_file = QFileDialog.getOpenFileName(self, "Select anchors file",
-                                                        filter="anchors file(*.anchors)")[0]
+                                                        filter="anchors files(*.anchors);;all files(*.*)")[0]
         self.ui.anchors_text.setText(self.anchors_file)
 
     def load_qry_agp(self):
         self.qry_agp_file = QFileDialog.getOpenFileName(self, "Select query agp file",
-                                                        filter="agp file(*.agp)")[0]
+                                                        filter="agp files(*.agp);;all files(*.*)")[0]
         self.ui.qry_agp_text.setText(self.qry_agp_file)
 
     def send_path(self):
