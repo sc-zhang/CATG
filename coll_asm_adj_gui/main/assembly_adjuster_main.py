@@ -1,6 +1,6 @@
 from os import path
 import sys
-from coll_asm_adj_gui.windows import file_loader_dialog
+from coll_asm_adj_gui.main import file_loader_dialog
 from coll_asm_adj_gui.io import file_reader
 from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, custom_control
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
@@ -26,25 +26,38 @@ class AssemblyAdjusterMain(QWidget):
         self.main_window = None
         self.graph_scene = None
 
-        self.opt_method_db = {"Insert front": self.__ins_front,
-                              "Insert back": self.__ins_back,
-                              "Insert head": self.__ins_head,
-                              "Insert tail": self.__ins_tail,
-                              "Source chromosome": self.__rev_chr,
-                              "Source block": self.__rev_blk,
-                              "Swap chromosome": self.__swp_chr,
-                              "Swap block": self.__swp_blk}
-
+        self.opt_method_db = {
+            "Insert front": self.__ins_front,
+            "Insert back": self.__ins_back,
+            "Insert head": self.__ins_head,
+            "Insert tail": self.__ins_tail,
+            "Source chromosome": self.__rev_chr,
+            "Source block": self.__rev_blk,
+            "Swap chromosome": self.__swp_chr,
+            "Swap block": self.__swp_blk,
+            "Delete block": self.__remove_blk
+        }
+        self.opt_method_info = {
+            "Insert front": "Inserting",
+            "Insert back": "Inserting",
+            "Insert head": "Inserting",
+            "Insert tail": "Inserting",
+            "Source chromosome": "Reversing",
+            "Source block": "Reversing",
+            "Swap chromosome": "Swapping",
+            "Swap block": "Swapping",
+            "Delete block": "Removing"
+        }
+        # File paths and names
         self.qry_bed_file = ""
         self.ref_bed_file = ""
         self.anchors_file = ""
         self.qry_agp_file = ""
         self.qry_name = ""
         self.ref_name = ""
-        self.pic = ""
 
-        self.qry_chr_list = []
-
+        # Datas
+        self.qry_chr_list = None
         self.qry_bed_db = None
         self.last_bed_db = None
         self.ref_bed_db = None
@@ -55,9 +68,13 @@ class AssemblyAdjusterMain(QWidget):
         self.block_list_db = None
         self.block_detail = None
 
+        # mpl_vis for generate collinearity figure
         self.mpl_vis = vis.VisContent()
 
+        # adjuster for all adjust operations
         self.adjuster = adjuster.Adjuster()
+
+        # reader for data
         self.reader = file_reader.Reader()
 
         self.__init_ui()
@@ -76,11 +93,60 @@ class AssemblyAdjusterMain(QWidget):
         self.ui.tgt_chr_cbox.currentTextChanged.connect(self.__add_tgt_blks)
         self.ui.src_blk_cbox.currentTextChanged.connect(self.__add_blk_lst)
 
+    # Functions below are used for loading data and generating figure
     def __load_file_loader(self):
         file_loader = file_loader_dialog.FileLoaderDialog(self)
         self.__notify_with_title("Select files")
         file_loader.show()
         file_loader.signal_path.connect(self.__get_file_path)
+
+    def __get_file_path(self, content):
+        if content:
+            self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file = content
+            if path.isfile(self.qry_bed_file) and path.isfile(self.ref_bed_file) and \
+                    path.isfile(self.anchors_file) and path.isfile(self.qry_agp_file):
+                self.__notify_with_title("Loading files")
+
+                if self.__load_file():
+                    self.__add_options()
+                    self.__show_pic()
+                    self.__notify_with_title("Files loaded")
+                else:
+                    QMessageBox.critical(self, 'Error', 'Cannot load files, please check input files!')
+                    self.__notify_with_title("Files load failed")
+                    return
+                self.__enable_controls()
+            else:
+                self.__notify_with_title()
+        else:
+            self.__notify_with_title()
+
+    def __load_file(self):
+        if '/' in self.qry_bed_file:
+            sep = '/'
+        else:
+            sep = '\\'
+        self.qry_name = self.qry_bed_file.split(sep)[-1].split('.')[0]
+        self.ref_name = self.ref_bed_file.split(sep)[-1].split('.')[0]
+        try:
+            self.qry_chr_list, self.qry_bed_db = self.reader.read_bed(self.qry_bed_file)
+            if not self.qry_bed_db:
+                return False
+
+            _, self.ref_bed_db = self.reader.read_bed(self.ref_bed_file)
+            if not self.ref_bed_db:
+                return False
+
+            self.gene_pairs = self.reader.read_anchors(self.anchors_file)
+            if not self.gene_pairs:
+                return False
+
+            self.qry_agp_db = self.reader.read_agp(self.qry_agp_file)
+            if not self.qry_agp_db:
+                return False
+        except IndexError:
+            return False
+        return True
 
     def __save_files(self):
         self.__notify_with_title("Saving files")
@@ -104,8 +170,8 @@ class AssemblyAdjusterMain(QWidget):
             with open(block_file, 'w') as fout:
                 for chrn in sorted(self.mpl_vis.block_list_db):
                     for idx in self.mpl_vis.block_list_db[chrn]:
-                        idx = int(idx)-1
-                        fout.write(">%s_Block_%d\n%s\n" % (chrn, idx+1, ' '.join(self.mpl_vis.block_detail[idx])))
+                        idx = int(idx) - 1
+                        fout.write(">%s_Block_%d\n%s\n" % (chrn, idx + 1, ' '.join(self.mpl_vis.block_detail[idx])))
 
             QMessageBox.information(self, "Save files", "Tour files saved.")
             self.__notify_with_title("Success")
@@ -152,27 +218,50 @@ class AssemblyAdjusterMain(QWidget):
             self.mpl_vis.figure_content.draw()
         self.__notify_with_title("Success")
 
-    def __get_file_path(self, content):
-        if content:
-            self.qry_bed_file, self.ref_bed_file, self.anchors_file, self.qry_agp_file = content
-            if path.isfile(self.qry_bed_file) and path.isfile(self.ref_bed_file) and \
-                    path.isfile(self.anchors_file) and path.isfile(self.qry_agp_file):
-                self.__notify_with_title("Loading files")
+    # Functions below are used for controlling UI
+    def __enable_controls(self):
+        self.ui.file_save_btn.setEnabled(True)
+        self.ui.blk_lst.setEnabled(True)
+        self.ui.undo_btn.setEnabled(True)
+        self.ui.mod_btn.setEnabled(True)
+        self.ui.refresh_btn.setEnabled(True)
+        self.ui.src_chr_cbox.setEnabled(True)
+        self.ui.src_blk_cbox.setEnabled(True)
+        self.ui.tgt_chr_cbox.setEnabled(True)
+        self.ui.tgt_blk_cbox.setEnabled(True)
+        self.ui.method_cbox.setEnabled(True)
+        self.ui.rev_chk.setEnabled(True)
+        self.ui.plot_viewer.setEnabled(True)
 
-                if self.__load_file():
-                    self.__add_options()
-                    self.__show_pic()
-                    self.__notify_with_title("Files loaded")
-                else:
-                    QMessageBox.critical(self, 'Error', 'Cannot load files, please check input files!')
-                    self.__notify_with_title("Files load failed")
-                    return
-                self.__enable_controls()
-            else:
-                self.__notify_with_title()
+    def __add_options(self):
+        self.ui.src_chr_cbox.addItems(self.qry_chr_list)
+        self.ui.tgt_chr_cbox.addItems(self.qry_chr_list)
+
+    def __add_src_blks(self, value):
+        self.ui.src_blk_cbox.clear()
+        if self.block_list_db and value in self.block_list_db:
+            self.ui.src_blk_cbox.addItems(self.block_list_db[value])
+
+    def __add_tgt_blks(self, value):
+        self.ui.tgt_blk_cbox.clear()
+        if self.block_list_db and value in self.block_list_db:
+            self.ui.tgt_blk_cbox.addItems(self.block_list_db[value])
+
+    def __add_blk_lst(self, value):
+        self.ui.blk_lst.clear()
+        if value:
+            self.ui.blk_lst.addItems(self.block_detail[int(value) - 1])
+
+    def __notify_with_title(self, info=""):
+        if info:
+            self.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
         else:
-            self.__notify_with_title()
+            self.setWindowTitle("Manual Collinearity Assembly Adjuster")
 
+    def closeEvent(self, event):
+        sys.exit(0)
+
+    # Functions below are used for adjusting collinearity blocks
     def __modify(self):
         self.ui.mod_btn.setEnabled(False)
         args = OptArgs()
@@ -184,16 +273,16 @@ class AssemblyAdjusterMain(QWidget):
         args.is_rev = self.ui.rev_chk.isChecked()
         opt = self.ui.method_cbox.currentText()
 
-        self.__notify_with_title(opt)
-
         if opt in self.opt_method_db:
+            self.__notify_with_title(self.opt_method_info[opt])
+
             self.last_agp_db = deepcopy(self.qry_agp_db)
             self.last_bed_db = deepcopy(self.qry_bed_db)
             self.opt_method_db[opt](args)
             self.__show_pic()
             self.ui.mod_btn.setEnabled(True)
 
-        self.__notify_with_title("Success")
+            self.__notify_with_title("Success")
 
     def __undo_modify(self):
         if self.last_agp_db:
@@ -231,7 +320,7 @@ class AssemblyAdjusterMain(QWidget):
     def __ins_head(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
         tmp_dict[args.src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[args.src_chr],
-                                                                        self.block_regions[args.src_blk])
+                                                                             self.block_regions[args.src_blk])
         if args.is_rev:
             extract_agp_list = self.adjuster.reverse_chr(extract_agp_list)
 
@@ -317,71 +406,10 @@ class AssemblyAdjusterMain(QWidget):
 
                 del tmp_dict
 
-    def __load_file(self):
-        if '/' in self.qry_bed_file:
-            sep = '/'
-        else:
-            sep = '\\'
-        self.qry_name = self.qry_bed_file.split(sep)[-1].split('.')[0]
-        self.ref_name = self.ref_bed_file.split(sep)[-1].split('.')[0]
-        try:
-            self.qry_chr_list, self.qry_bed_db = self.reader.read_bed(self.qry_bed_file)
-            if not self.qry_bed_db:
-                return False
+    def __remove_blk(self, args):
+        tmp_dict = deepcopy(self.qry_agp_db)
+        tmp_dict[args.src_chr] = self.adjuster.remove_blk(tmp_dict[args.src_chr], self.block_regions[args.src_blk])
+        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        self.qry_agp_db = deepcopy(tmp_dict)
 
-            _, self.ref_bed_db = self.reader.read_bed(self.ref_bed_file)
-            if not self.ref_bed_db:
-                return False
-
-            self.gene_pairs = self.reader.read_anchors(self.anchors_file)
-            if not self.gene_pairs:
-                return False
-
-            self.qry_agp_db = self.reader.read_agp(self.qry_agp_file)
-            if not self.qry_agp_db:
-                return False
-        except IndexError:
-            return False
-        return True
-
-    def __enable_controls(self):
-        self.ui.file_save_btn.setEnabled(True)
-        self.ui.blk_lst.setEnabled(True)
-        self.ui.undo_btn.setEnabled(True)
-        self.ui.mod_btn.setEnabled(True)
-        self.ui.refresh_btn.setEnabled(True)
-        self.ui.src_chr_cbox.setEnabled(True)
-        self.ui.src_blk_cbox.setEnabled(True)
-        self.ui.tgt_chr_cbox.setEnabled(True)
-        self.ui.tgt_blk_cbox.setEnabled(True)
-        self.ui.method_cbox.setEnabled(True)
-        self.ui.rev_chk.setEnabled(True)
-        self.ui.plot_viewer.setEnabled(True)
-
-    def __add_options(self):
-        self.ui.src_chr_cbox.addItems(self.qry_chr_list)
-        self.ui.tgt_chr_cbox.addItems(self.qry_chr_list)
-
-    def __add_src_blks(self, value):
-        self.ui.src_blk_cbox.clear()
-        if self.block_list_db and value in self.block_list_db:
-            self.ui.src_blk_cbox.addItems(self.block_list_db[value])
-
-    def __add_tgt_blks(self, value):
-        self.ui.tgt_blk_cbox.clear()
-        if self.block_list_db and value in self.block_list_db:
-            self.ui.tgt_blk_cbox.addItems(self.block_list_db[value])
-
-    def __add_blk_lst(self, value):
-        self.ui.blk_lst.clear()
-        if value:
-            self.ui.blk_lst.addItems(self.block_detail[int(value) - 1])
-
-    def __notify_with_title(self, info=""):
-        if info:
-            self.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
-        else:
-            self.setWindowTitle("Manual Collinearity Assembly Adjuster")
-
-    def closeEvent(self, event):
-        sys.exit(0)
+        del tmp_dict

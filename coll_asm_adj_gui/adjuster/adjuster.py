@@ -33,6 +33,8 @@ class Adjuster:
 
             if match_ctg:
                 csp, cep, tig, _, tdir = match_ctg
+                if tig not in cov_adj_agp_db:
+                    continue
                 nchrn, nsp, nep, nctg_len, ndir = cov_adj_agp_db[tig]
 
                 if tdir == '+':
@@ -224,4 +226,23 @@ class Adjuster:
                 _[1] = base + _[3] - 1
                 adj_agp_list.append(_)
                 base += _[3] + 100
+        return adj_agp_list
+
+    @staticmethod
+    def remove_blk(agp_list, pos):
+        start_idx, _, end_idx, _ = pos
+        adj_agp_list = []
+
+        base = 1
+
+        for _ in agp_list[:start_idx]:
+            adj_agp_list.append(_)
+            base += _[3] + 100
+
+        for _ in agp_list[end_idx + 1:]:
+            _[0] = base
+            _[1] = base + _[3] - 1
+            adj_agp_list.append(_)
+            base += _[3] + 100
+
         return adj_agp_list

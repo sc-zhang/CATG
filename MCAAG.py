@@ -5,7 +5,7 @@ from PySide2.QtWidgets import QApplication
 from PySide2.QtGui import QIcon
 from PySide2.QtCore import QCoreApplication, Qt
 from qt_material import apply_stylesheet
-from coll_asm_adj_gui.windows.assembly_adjuster_main import AssemblyAdjusterMain
+from coll_asm_adj_gui.main.assembly_adjuster_main import AssemblyAdjusterMain
 
 
 if __name__ == "__main__":

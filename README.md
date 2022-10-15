@@ -48,7 +48,8 @@ There are 6 type of operations can be done.
 7. **Swap chromosome**
 8. **Swap block**  
    These two operate can swap regions or chromosomes, and Reverse option won't affect.
-
+9. **Delete block**  
+   Delete block from source chromosome.
 ### Others
 You can resize the collinearity figure with wheel, and use mouse to drag it.
 
@@ -85,7 +86,7 @@ If you want executable file, please use pyinstaller, and run commands below
 pip install pyinstaller
 # For unix-like system
 pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/resources/MCAAG.ico" --hidden-import PySide2.QtXml --add-data "coll_asm_adj_gui/resources/MCAAG.png:coll_asm_adj_gui/resources/" -F -w
-# For windows
+# For main
 pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/resources/MCAAG.ico" --hidden-import PySide2.QtXml --add-data "coll_asm_adj_gui/resources/MCAAG.png;coll_asm_adj_gui/resources/" -F -w
 ```
 You can also use nuitka to do samething, the parameters may need modified for building.
@@ -93,9 +94,9 @@ You can also use nuitka to do samething, the parameters may need modified for bu
 pip install nuitka
 pip install zstandard # for compress
 # For unix-like system
-python -m nuitka --standalone --windows-disable-console --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
-# For windows
-python -m nuitka --standalone --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
+python -m nuitka --standalone --main-disable-console --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --main-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
+# For main
+python -m nuitka --standalone --main-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --main-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
 ```
 
 ### Environments have been tested for packing executable file
