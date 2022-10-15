@@ -107,8 +107,10 @@ class AssemblyAdjusterMain(QWidget):
                         idx = int(idx)-1
                         fout.write(">%s_Block_%d\n%s\n" % (chrn, idx+1, ' '.join(self.mpl_vis.block_detail[idx])))
 
-        QMessageBox.information(self, "Save files", "Tour files saved.")
-        self.__notify_with_title("Success")
+            QMessageBox.information(self, "Save files", "Tour files saved.")
+            self.__notify_with_title("Success")
+        else:
+            self.__notify_with_title("Nothing saved")
 
     def __show_pic(self):
         self.__notify_with_title("Drawing")
