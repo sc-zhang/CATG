@@ -49,7 +49,7 @@ There are 6 type of operations can be done.
 8. **Swap block**  
    These two operate can swap regions or chromosomes, and Reverse option won't affect.
 
-### Otherwise
+### Others
 You can resize the collinearity figure with wheel, and use mouse to drag it.
 
 ## Example
@@ -73,6 +73,8 @@ If you want clust less contigs in single block, increase Resolution value may he
 After that, click "REFRESH" button to update collinearity figure.
 ![](Manual/Step5.Refresh.png "Refresh")
 
+### Step6. Save
+Click "SAVE FILES" to save the adjusted tour files, after that ALLHiC_build can use for building new chromosome assembly from contig level assembly, or use allhic optimize to determine the order and orientation of contigs.
 ## Generate executable file
 If you want executable file, please use pyinstaller, and run commands below
 ```bash
