@@ -55,26 +55,30 @@ You can resize the collinearity figure with wheel, and use mouse to drag it.
 ## Example
 
 ### Step1. Open MCAAG and click "LOADFILES"
-![](Manual/Step1.LOAD_FILES.png "Main Form")
+![](Manual/Step1.LoadFiles.png)
 
 ### Step2. Select files
-![](Manual/Step2.Select_Files.png "Select Files")
+![](Manual/Step2.SelectFiles.png)
 
 ### Step3. Set Operations
-![](Manual/Step3.SetOperations.png "SetOperations")
+![](Manual/Step3.SetOperations.png)
 The red rectangles above means move Block 1 in Chromosome 1 to the tail of Chromosome 1, and convert Block1 to its reverse complement. 
 
 ### Step4. Modify
 After click "MODIFY" button, the new collinearity figure will be updated, it may take several seconds, please be patient.
-![](Manual/Step4.Modified.png "Modify")
+![](Manual/Step4.Modified.png)
 
 ### Step5. Refresh
 If you want clust less contigs in single block, increase Resolution value may help you.
 After that, click "REFRESH" button to update collinearity figure.
-![](Manual/Step5.Refresh.png "Refresh")
+![](Manual/Step5.Refresh.png)
 
 ### Step6. Save
 Click "SAVE FILES" to save the adjusted tour files, after that ALLHiC_build can use for building new chromosome assembly from contig level assembly, or use allhic optimize to determine the order and orientation of contigs.
+![](Manual/Step6.SaveFiles.png)
+![](Manual/Step7.SavedFiles.png)
+
+
 ## Generate executable file
 If you want executable file, please use pyinstaller, and run commands below
 ```bash
