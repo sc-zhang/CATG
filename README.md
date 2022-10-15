@@ -21,7 +21,7 @@ cd /path/to/install/MCAAG
 python3 MCAAG.py
 ```
 
-## Data prepare
+## Data preparation
 Run jcvi for generating anchors file
 ```bash
 python -m jcvi.compara.catalog ortholog query.bed reference.bed
