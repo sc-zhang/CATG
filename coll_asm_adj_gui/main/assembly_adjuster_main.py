@@ -97,8 +97,9 @@ class AssemblyAdjusterMain(QWidget):
     def __load_file_loader(self):
         file_loader = file_loader_dialog.FileLoaderDialog(self)
         self.__notify_with_title("Select files")
-        file_loader.show()
+        file_loader.setModal(True)
         file_loader.signal_path.connect(self.__get_file_path)
+        file_loader.show()
 
     def __get_file_path(self, content):
         if content:
