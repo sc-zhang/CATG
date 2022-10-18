@@ -70,7 +70,7 @@ After click "MODIFY" button, the new collinearity figure will be updated, it may
 ![](Manual/Step4.Modified.png)
 
 ### Step5. Refresh
-If you want clust less contigs in single block, increase Resolution value may help you.
+If you want cluster less contigs in single block, increase Resolution value may help you.
 After that, click "REFRESH" button to update collinearity figure.
 ![](Manual/Step5.Refresh.png)
 
