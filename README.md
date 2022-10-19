@@ -9,7 +9,7 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 * [ALLHiC](https://github.com/tangerzhang/ALLHiC)
 * Python 3.7+
 
-## Python Modules
+### Python Modules
 * PySide6
 * qt-material
 * matplotlib
