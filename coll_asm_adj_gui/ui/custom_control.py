@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QLineEdit
-from PySide2.QtCore import Qt, QPoint
+from PySide6.QtWidgets import QGraphicsView, QGraphicsScene, QLineEdit
+from PySide6.QtCore import Qt, QPoint
 
 
 class ControlGraphicsView(QGraphicsView):
@@ -13,9 +13,12 @@ class ControlGraphicsView(QGraphicsView):
         self.__zoom = 5
 
     def wheelEvent(self, event):
-        if event.delta() > 0 and self.__zoom >= 10:
+        delta = event.angleDelta().y()
+        if delta == 0:
+            pass
+        if delta > 0 and self.__zoom >= 10:
             return
-        elif event.delta() < 0 and self.__zoom <= 0:
+        elif delta < 0 and self.__zoom <= 0:
             return
         else:
             cur_point = event.position()
@@ -27,10 +30,10 @@ class ControlGraphicsView(QGraphicsView):
             h_scale = cur_point.x() / view_width
             v_scale = cur_point.y() / view_height
 
-            if event.delta() > 0:
+            if delta > 0:
                 self.scale(1.25, 1.25)
                 self.__zoom += 1
-            else:
+            elif delta < 0:
                 self.scale(0.8, 0.8)
                 self.__zoom -= 1
             view_point = self.transform().map(scene_pos)

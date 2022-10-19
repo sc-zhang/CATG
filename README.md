@@ -1,5 +1,5 @@
 ## Introduction
-MCAAG (Manual Collinearity Assembly Adjuster GUI) is a GUI application base on Qt 5 with PySide2. 
+MCAAG (Manual Collinearity Assembly Adjuster GUI) is a GUI application base on Qt with PySide6. 
 It is a tool that can adjust assembly with collinearity and generate tour files for assembly.
 
 ## Dependencies
@@ -10,16 +10,12 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 * Python 3.7+
 
 ## Python Modules
-* PySide2
+* PySide6
 * qt-material
 * matplotlib
 
 ## Installation
-```bash
-git clone https://github.com/sc-zhang/MCAAG.git
-cd /path/to/install/MCAAG
-python3 MCAAG.py
-```
+Download executable file from release.
 
 ## Data preparation
 Run jcvi for generating anchors file
@@ -78,46 +74,3 @@ After that, click "REFRESH" button to update collinearity figure.
 Click "SAVE FILES" to save the adjusted tour files, after that ALLHiC_build can use for building new chromosome assembly from contig level assembly, or use allhic optimize to determine the order and orientation of contigs.
 ![](Manual/Step6.SaveFiles.png)
 ![](Manual/Step7.SavedFiles.png)
-
-
-## Generate executable file
-If you want executable file, please use pyinstaller, and run commands below
-```bash
-pip install pyinstaller
-# For unix-like system
-pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/resources/MCAAG.ico" --hidden-import PySide2.QtXml --add-data "coll_asm_adj_gui/resources/MCAAG.png:coll_asm_adj_gui/resources/" -F -w
-# For windows
-pyinstaller --noconsole MCAAG.py -i "coll_asm_adj_gui/resources/MCAAG.ico" --hidden-import PySide2.QtXml --add-data "coll_asm_adj_gui/resources/MCAAG.png;coll_asm_adj_gui/resources/" -F -w
-```
-You can also use nuitka to do samething, the parameters may need modified for building.
-```bash
-pip install nuitka
-pip install zstandard # for compress
-# For unix-like system
-python -m nuitka --standalone --windows-disable-console --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
-# For windows
-python -m nuitka --standalone --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --plugin-enable=pyside2,numpy --follow-import-to=matplotlib,qt_material --include-data-files="coll_asm_adj_gui/resources/MCAAG.png"="coll_asm_adj_gui/resources/MCAAG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_adj_gui/resources/MCAAG.ico" --onefile MCAAG.py
-```
-
-### Environments have been tested for packing executable file
-Sometimes the executable file packed by nuitka may not work, the packages combination list below has been tested, may help build your own executable file.
-```bash
-Python==3.8.10
-PyInstaller==5.4.1
-Nuitka==1.1.2
-numpy==1.19.5
-matplotlib==3.4.3
-PySide2==5.15.2.1
-qt-material==2.12
-zstandard==0.18.0
-```
-```bash
-Python==3.10.8
-PyInstaller==5.5
-Nuitka==1.1.4
-numpy==1.23.4
-matplotlib==3.5.1
-PySide2==5.15.2.1
-qt-material==2.12
-zstandard==0.18.0
-```

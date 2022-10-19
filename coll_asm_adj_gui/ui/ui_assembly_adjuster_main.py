@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'assembly_adjuster_maineHSVsc.ui'
+## Form generated from reading UI file 'assembly_adjuster_mainSfJexb.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.3
+## Created by: Qt User Interface Compiler version 6.4.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QGraphicsView, QGridLayout, QHBoxLayout, QLabel,
+    QLineEdit, QListWidget, QListWidgetItem, QPushButton,
+    QSizePolicy, QWidget)
 from coll_asm_adj_gui.ui.custom_control import ControlGraphicsView
-
 
 class Ui_AssemblyAdjusterMain(object):
     def setupUi(self, AssemblyAdjusterMain):
@@ -108,7 +115,6 @@ class Ui_AssemblyAdjusterMain(object):
         font1 = QFont()
         font1.setPointSize(16)
         font1.setBold(True)
-        font1.setWeight(75)
         self.file_loader_btn.setFont(font1)
 
         self.horizontalLayout_2.addWidget(self.file_loader_btn)
@@ -147,7 +153,6 @@ class Ui_AssemblyAdjusterMain(object):
         font2 = QFont()
         font2.setPointSize(12)
         font2.setBold(True)
-        font2.setWeight(75)
         self.label_6.setFont(font2)
 
         self.gridLayout.addWidget(self.label_6, 3, 0, 1, 1)
@@ -248,3 +253,4 @@ class Ui_AssemblyAdjusterMain(object):
         self.label_4.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Target block id:", None))
         self.label_7.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Operations:", None))
     # retranslateUi
+

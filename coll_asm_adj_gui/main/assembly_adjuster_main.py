@@ -5,7 +5,7 @@ from coll_asm_adj_gui.io import file_reader
 from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, custom_control
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
-from PySide2.QtWidgets import QWidget, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox
 
 
 class OptArgs:
