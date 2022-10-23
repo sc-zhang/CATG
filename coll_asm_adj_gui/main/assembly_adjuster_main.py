@@ -5,7 +5,9 @@ from coll_asm_adj_gui.io import file_reader
 from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, custom_control
 from coll_asm_adj_gui.adjuster import locator, vis, adjuster
 from copy import deepcopy
+from traceback import format_exc
 from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox
+from PySide6.QtCore import Qt
 
 
 class OptArgs:
@@ -97,8 +99,8 @@ class AssemblyAdjusterMain(QWidget):
     def __load_file_loader(self):
         file_loader = file_loader_dialog.FileLoaderDialog(self)
         self.__notify_with_title("Select files")
-        file_loader.setModal(True)
         file_loader.signal_path.connect(self.__get_file_path)
+        file_loader.setModal(True)
         file_loader.show()
 
     def __get_file_path(self, content):
@@ -110,7 +112,9 @@ class AssemblyAdjusterMain(QWidget):
 
                 if self.__load_file():
                     self.__add_options()
-                    self.__show_pic()
+                    status = self.__show_pic()
+                    if status == -1:
+                        return
                     self.__notify_with_title("Files loaded")
                 else:
                     QMessageBox.critical(self, 'Error', 'Cannot load files, please check input files!')
@@ -220,9 +224,10 @@ class AssemblyAdjusterMain(QWidget):
                 self.mpl_vis.figure_content.draw()
             self.__notify_with_title("Success")
         except Exception as e:
-            QMessageBox.critical(self, "Show picture failed", repr(e))
-            self.__notify_with_title("Draw failed")
-            return
+            QMessageBox.critical(self, "Show picture failed", format_exc())
+            self.__notify_with_title("Draw failed by %s" % repr(e))
+            return -1
+        return 0
 
     # Functions below are used for controlling UI
     def __enable_controls(self):
@@ -269,17 +274,17 @@ class AssemblyAdjusterMain(QWidget):
 
     # Functions below are used for adjusting collinearity blocks
     def __modify(self):
+
+        self.ui.mod_btn.setEnabled(False)
+        args = OptArgs()
+
+        args.src_chr = self.ui.src_chr_cbox.currentText()
+        args.src_blk = int(self.ui.src_blk_cbox.currentText()) - 1
+        args.tgt_chr = self.ui.tgt_chr_cbox.currentText()
+        args.tgt_blk = int(self.ui.tgt_blk_cbox.currentText()) - 1
+        args.is_rev = self.ui.rev_chk.isChecked()
+        opt = self.ui.method_cbox.currentText()
         try:
-            self.ui.mod_btn.setEnabled(False)
-            args = OptArgs()
-
-            args.src_chr = self.ui.src_chr_cbox.currentText()
-            args.src_blk = int(self.ui.src_blk_cbox.currentText()) - 1
-            args.tgt_chr = self.ui.tgt_chr_cbox.currentText()
-            args.tgt_blk = int(self.ui.tgt_blk_cbox.currentText()) - 1
-            args.is_rev = self.ui.rev_chk.isChecked()
-            opt = self.ui.method_cbox.currentText()
-
             if opt in self.opt_method_db:
                 self.__notify_with_title(self.opt_method_info[opt])
 
@@ -291,8 +296,8 @@ class AssemblyAdjusterMain(QWidget):
 
                 self.__notify_with_title("Success")
         except Exception as e:
-            QMessageBox.critical(self, "Modify failed", repr(e))
-            self.__notify_with_title(self.opt_method_info[opt] + " Failed")
+            QMessageBox.critical(self, "Modify failed", format_exc())
+            self.__notify_with_title(self.opt_method_info[opt] + " Failed with: %s" % repr(e))
             return
 
     def __undo_modify(self):
