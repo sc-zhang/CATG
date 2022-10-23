@@ -180,44 +180,49 @@ class AssemblyAdjusterMain(QWidget):
             self.__notify_with_title("Nothing saved")
 
     def __show_pic(self):
-        self.__notify_with_title("Drawing")
-        blk_loc = locator.Locator()
-        blk_loc.convert_anchors(self.qry_bed_db, self.ref_bed_db, self.gene_pairs)
-        if self.ui.resolution_text.text():
-            resolution = int(float(self.ui.resolution_text.text()))
-        else:
-            resolution = 20
-        if resolution == 0 or resolution == 20:
-            resolution = 20
-            self.ui.resolution_text.setText("20")
-        blk_loc.get_break_blocks(resolution)
+        try:
+            self.__notify_with_title("Drawing")
+            blk_loc = locator.Locator()
+            blk_loc.convert_anchors(self.qry_bed_db, self.ref_bed_db, self.gene_pairs)
+            if self.ui.resolution_text.text():
+                resolution = int(float(self.ui.resolution_text.text()))
+            else:
+                resolution = 20
+            if resolution == 0 or resolution == 20:
+                resolution = 20
+                self.ui.resolution_text.setText("20")
+            blk_loc.get_break_blocks(resolution)
 
-        self.mpl_vis.gen_figure(blk_loc.links, blk_loc.block_db, self.qry_agp_db, resolution,
-                                self.qry_name, self.ref_name)
+            self.mpl_vis.gen_figure(blk_loc.links, blk_loc.block_db, self.qry_agp_db, resolution,
+                                    self.qry_name, self.ref_name)
 
-        self.block_regions = self.mpl_vis.block_regions
-        self.block_list_db = self.mpl_vis.block_list_db
-        self.block_detail = self.mpl_vis.block_detail
+            self.block_regions = self.mpl_vis.block_regions
+            self.block_list_db = self.mpl_vis.block_list_db
+            self.block_detail = self.mpl_vis.block_detail
 
-        self.ui.src_blk_cbox.clear()
-        src_chr = self.ui.src_chr_cbox.currentText()
-        if src_chr in self.block_list_db:
-            self.ui.src_blk_cbox.addItems(self.block_list_db[src_chr])
+            self.ui.src_blk_cbox.clear()
+            src_chr = self.ui.src_chr_cbox.currentText()
+            if src_chr in self.block_list_db:
+                self.ui.src_blk_cbox.addItems(self.block_list_db[src_chr])
 
-        self.ui.blk_lst.clear()
-        self.ui.blk_lst.addItems(self.block_detail[0])
+            self.ui.blk_lst.clear()
+            self.ui.blk_lst.addItems(self.block_detail[0])
 
-        self.ui.tgt_blk_cbox.clear()
-        if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
-            self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
-        if not self.graph_scene:
-            self.graph_scene = custom_control.ControlGraphicsScene()
-            self.graph_scene.addWidget(self.mpl_vis.figure_content)
-            self.ui.plot_viewer.setScene(self.graph_scene)
-            self.ui.plot_viewer.show()
-        else:
-            self.mpl_vis.figure_content.draw()
-        self.__notify_with_title("Success")
+            self.ui.tgt_blk_cbox.clear()
+            if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
+                self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
+            if not self.graph_scene:
+                self.graph_scene = custom_control.ControlGraphicsScene()
+                self.graph_scene.addWidget(self.mpl_vis.figure_content)
+                self.ui.plot_viewer.setScene(self.graph_scene)
+                self.ui.plot_viewer.show()
+            else:
+                self.mpl_vis.figure_content.draw()
+            self.__notify_with_title("Success")
+        except Exception as e:
+            QMessageBox.critical(self, "Show picture failed", repr(e))
+            self.__notify_with_title("Draw failed")
+            return
 
     # Functions below are used for controlling UI
     def __enable_controls(self):
@@ -264,26 +269,31 @@ class AssemblyAdjusterMain(QWidget):
 
     # Functions below are used for adjusting collinearity blocks
     def __modify(self):
-        self.ui.mod_btn.setEnabled(False)
-        args = OptArgs()
+        try:
+            self.ui.mod_btn.setEnabled(False)
+            args = OptArgs()
 
-        args.src_chr = self.ui.src_chr_cbox.currentText()
-        args.src_blk = int(self.ui.src_blk_cbox.currentText()) - 1
-        args.tgt_chr = self.ui.tgt_chr_cbox.currentText()
-        args.tgt_blk = int(self.ui.tgt_blk_cbox.currentText()) - 1
-        args.is_rev = self.ui.rev_chk.isChecked()
-        opt = self.ui.method_cbox.currentText()
+            args.src_chr = self.ui.src_chr_cbox.currentText()
+            args.src_blk = int(self.ui.src_blk_cbox.currentText()) - 1
+            args.tgt_chr = self.ui.tgt_chr_cbox.currentText()
+            args.tgt_blk = int(self.ui.tgt_blk_cbox.currentText()) - 1
+            args.is_rev = self.ui.rev_chk.isChecked()
+            opt = self.ui.method_cbox.currentText()
 
-        if opt in self.opt_method_db:
-            self.__notify_with_title(self.opt_method_info[opt])
+            if opt in self.opt_method_db:
+                self.__notify_with_title(self.opt_method_info[opt])
 
-            self.last_agp_db = deepcopy(self.qry_agp_db)
-            self.last_bed_db = deepcopy(self.qry_bed_db)
-            self.opt_method_db[opt](args)
-            self.__show_pic()
-            self.ui.mod_btn.setEnabled(True)
+                self.last_agp_db = deepcopy(self.qry_agp_db)
+                self.last_bed_db = deepcopy(self.qry_bed_db)
+                self.opt_method_db[opt](args)
+                self.__show_pic()
+                self.ui.mod_btn.setEnabled(True)
 
-            self.__notify_with_title("Success")
+                self.__notify_with_title("Success")
+        except Exception as e:
+            QMessageBox.critical(self, "Modify failed", repr(e))
+            self.__notify_with_title(self.opt_method_info[opt] + " Failed")
+            return
 
     def __undo_modify(self):
         if self.last_agp_db:
