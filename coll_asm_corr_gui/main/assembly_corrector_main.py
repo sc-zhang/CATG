@@ -1,13 +1,12 @@
 from os import path
 import sys
-from coll_asm_adj_gui.main import file_loader_dialog
-from coll_asm_adj_gui.io import file_reader
-from coll_asm_adj_gui.ui import ui_assembly_adjuster_main, custom_control
-from coll_asm_adj_gui.adjuster import locator, vis, adjuster
+from coll_asm_corr_gui.main import file_loader_dialog
+from coll_asm_corr_gui.io import file_reader
+from coll_asm_corr_gui.ui import ui_assembly_corrector_main, custom_control
+from coll_asm_corr_gui.corrector import locator, vis, corrector
 from copy import deepcopy
 from traceback import format_exc
 from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox
-from PySide6.QtCore import Qt
 
 
 class OptArgs:
@@ -20,10 +19,10 @@ class OptArgs:
         self.is_rev = False
 
 
-class AssemblyAdjusterMain(QWidget):
+class AssemblyCorrectorMain(QWidget):
 
     def __init__(self):
-        super(AssemblyAdjusterMain, self).__init__()
+        super(AssemblyCorrectorMain, self).__init__()
         self.ui = None
         self.main_window = None
         self.graph_scene = None
@@ -73,8 +72,8 @@ class AssemblyAdjusterMain(QWidget):
         # mpl_vis for generate collinearity figure
         self.mpl_vis = vis.VisContent()
 
-        # adjuster for all adjust operations
-        self.adjuster = adjuster.Adjuster()
+        # corrector for all adjust operations
+        self.corrector = corrector.Corrector()
 
         # reader for data
         self.reader = file_reader.Reader()
@@ -82,7 +81,7 @@ class AssemblyAdjusterMain(QWidget):
         self.__init_ui()
 
     def __init_ui(self):
-        self.ui = ui_assembly_adjuster_main.Ui_AssemblyAdjusterMain()
+        self.ui = ui_assembly_corrector_main.Ui_AssemblyCorrectorMain()
         self.ui.setupUi(self)
 
         self.ui.method_cbox.addItems(self.opt_method_db.keys())
@@ -265,9 +264,9 @@ class AssemblyAdjusterMain(QWidget):
 
     def __notify_with_title(self, info=""):
         if info:
-            self.setWindowTitle("Manual Collinearity Assembly Adjuster - %s" % info)
+            self.setWindowTitle("CATG - %s" % info)
         else:
-            self.setWindowTitle("Manual Collinearity Assembly Adjuster")
+            self.setWindowTitle("CATG")
 
     def closeEvent(self, event):
         sys.exit(0)
@@ -319,8 +318,8 @@ class AssemblyAdjusterMain(QWidget):
         if not args.is_rev:
             return
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr] = self.adjuster.reverse_chr(tmp_dict[args.src_chr])
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.src_chr] = self.corrector.reverse_chr(tmp_dict[args.src_chr])
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
@@ -328,59 +327,59 @@ class AssemblyAdjusterMain(QWidget):
         if not args.is_rev:
             return
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr] = self.adjuster.reverse_block(tmp_dict[args.src_chr], self.block_regions[args.src_blk])
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.src_chr] = self.corrector.reverse_block(tmp_dict[args.src_chr], self.block_regions[args.src_blk])
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
     def __ins_head(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[args.src_chr],
-                                                                             self.block_regions[args.src_blk])
+        tmp_dict[args.src_chr], extract_agp_list = self.corrector.split_block(tmp_dict[args.src_chr],
+                                                                              self.block_regions[args.src_blk])
         if args.is_rev:
-            extract_agp_list = self.adjuster.reverse_chr(extract_agp_list)
+            extract_agp_list = self.corrector.reverse_chr(extract_agp_list)
 
-        tmp_dict[args.tgt_chr] = self.adjuster.ins_term(tmp_dict[args.tgt_chr], extract_agp_list)
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.tgt_chr] = self.corrector.ins_term(tmp_dict[args.tgt_chr], extract_agp_list)
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
     def __ins_tail(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[args.src_chr],
-                                                                             self.block_regions[args.src_blk])
+        tmp_dict[args.src_chr], extract_agp_list = self.corrector.split_block(tmp_dict[args.src_chr],
+                                                                              self.block_regions[args.src_blk])
         if args.is_rev:
-            extract_agp_list = self.adjuster.reverse_chr(extract_agp_list)
+            extract_agp_list = self.corrector.reverse_chr(extract_agp_list)
 
-        tmp_dict[args.tgt_chr] = self.adjuster.ins_term(tmp_dict[args.tgt_chr], extract_agp_list, False)
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.tgt_chr] = self.corrector.ins_term(tmp_dict[args.tgt_chr], extract_agp_list, False)
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
     def __ins_front(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[args.src_chr],
-                                                                             self.block_regions[args.src_blk])
+        tmp_dict[args.src_chr], extract_agp_list = self.corrector.split_block(tmp_dict[args.src_chr],
+                                                                              self.block_regions[args.src_blk])
         if args.is_rev:
-            extract_agp_list = self.adjuster.reverse_chr(extract_agp_list)
+            extract_agp_list = self.corrector.reverse_chr(extract_agp_list)
 
-        tmp_dict[args.tgt_chr] = self.adjuster.ins_pos(tmp_dict[args.tgt_chr], extract_agp_list,
-                                                       self.block_regions[args.tgt_blk])
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.tgt_chr] = self.corrector.ins_pos(tmp_dict[args.tgt_chr], extract_agp_list,
+                                                        self.block_regions[args.tgt_blk])
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
     def __ins_back(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr], extract_agp_list = self.adjuster.split_block(tmp_dict[args.src_chr],
-                                                                             self.block_regions[args.src_blk])
+        tmp_dict[args.src_chr], extract_agp_list = self.corrector.split_block(tmp_dict[args.src_chr],
+                                                                              self.block_regions[args.src_blk])
         if args.is_rev:
-            extract_agp_list = self.adjuster.reverse_chr(extract_agp_list)
+            extract_agp_list = self.corrector.reverse_chr(extract_agp_list)
 
-        tmp_dict[args.tgt_chr] = self.adjuster.ins_pos(tmp_dict[args.tgt_chr], extract_agp_list,
-                                                       self.block_regions[args.tgt_blk],
-                                                       False)
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.tgt_chr] = self.corrector.ins_pos(tmp_dict[args.tgt_chr], extract_agp_list,
+                                                        self.block_regions[args.tgt_blk],
+                                                        False)
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
         del tmp_dict
 
@@ -391,7 +390,7 @@ class AssemblyAdjusterMain(QWidget):
             tmp_dict[args.src_chr] = deepcopy(tmp_dict[args.tgt_chr])
             tmp_dict[args.tgt_chr] = deepcopy(tmp_list)
 
-            self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+            self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
             self.qry_agp_db = deepcopy(tmp_dict)
             del tmp_dict, tmp_list
 
@@ -399,33 +398,34 @@ class AssemblyAdjusterMain(QWidget):
         if args.src_blk != args.tgt_blk:
             if args.src_chr != args.tgt_chr:
                 tmp_dict = deepcopy(self.qry_agp_db)
-                tmp_dict[args.tgt_chr], tmp_dict[args.src_chr] = self.adjuster.swap_blk_diff_chr(tmp_dict[args.src_chr],
-                                                                                                 self.block_regions[
-                                                                                                     args.src_blk],
-                                                                                                 tmp_dict[args.tgt_chr],
-                                                                                                 self.block_regions[
-                                                                                                     args.tgt_blk])
+                tmp_dict[args.tgt_chr], tmp_dict[args.src_chr] = self.corrector.swap_blk_diff_chr(
+                    tmp_dict[args.src_chr],
+                    self.block_regions[
+                        args.src_blk],
+                    tmp_dict[args.tgt_chr],
+                    self.block_regions[
+                        args.tgt_blk])
 
-                self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+                self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
                 self.qry_agp_db = deepcopy(tmp_dict)
 
                 del tmp_dict
             else:
                 tmp_dict = deepcopy(self.qry_agp_db)
-                tmp_dict[args.src_chr] = self.adjuster.swap_blk_single_chr(tmp_dict[args.src_chr],
-                                                                           self.block_regions[args.src_blk],
-                                                                           self.block_regions[args.tgt_blk])
+                tmp_dict[args.src_chr] = self.corrector.swap_blk_single_chr(tmp_dict[args.src_chr],
+                                                                            self.block_regions[args.src_blk],
+                                                                            self.block_regions[args.tgt_blk])
                 if not tmp_dict[args.src_chr]:
                     return
-                self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+                self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
                 self.qry_agp_db = deepcopy(tmp_dict)
 
                 del tmp_dict
 
     def __remove_blk(self, args):
         tmp_dict = deepcopy(self.qry_agp_db)
-        tmp_dict[args.src_chr] = self.adjuster.remove_blk(tmp_dict[args.src_chr], self.block_regions[args.src_blk])
-        self.qry_bed_db = self.adjuster.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
+        tmp_dict[args.src_chr] = self.corrector.remove_blk(tmp_dict[args.src_chr], self.block_regions[args.src_blk])
+        self.qry_bed_db = self.corrector.trans_anno(self.qry_agp_db, tmp_dict, self.qry_bed_db)
         self.qry_agp_db = deepcopy(tmp_dict)
 
         del tmp_dict

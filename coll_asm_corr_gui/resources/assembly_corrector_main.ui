@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AssemblyAdjusterMain</class>
- <widget class="QWidget" name="AssemblyAdjusterMain">
+ <class>AssemblyCorrectorMain</class>
+ <widget class="QWidget" name="AssemblyCorrectorMain">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Manual Collinearity Assembly Adjuster</string>
+   <string>CATG</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
@@ -133,7 +133,6 @@
           <property name="font">
            <font>
             <pointsize>16</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -156,7 +155,6 @@
           <property name="font">
            <font>
             <pointsize>16</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -201,7 +199,6 @@
         <property name="font">
          <font>
           <pointsize>12</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -238,7 +235,6 @@
           <property name="font">
            <font>
             <pointsize>16</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -261,7 +257,6 @@
           <property name="font">
            <font>
             <pointsize>16</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -284,7 +279,6 @@
           <property name="font">
            <font>
             <pointsize>16</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -339,7 +333,6 @@
         <property name="font">
          <font>
           <pointsize>12</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>

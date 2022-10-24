@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QDialog, QFileDialog, QDialogButtonBox
 from PySide6.QtCore import Signal
-from coll_asm_adj_gui.ui.ui_file_loader_dialog import Ui_FileLoaderDialog
+from coll_asm_corr_gui.ui.ui_file_loader_dialog import Ui_FileLoaderDialog
 
 
 class FileLoaderDialog(QDialog):

@@ -1,4 +1,4 @@
-class Adjuster:
+class Corrector:
 
     def __init__(self):
         pass
@@ -29,7 +29,7 @@ class Adjuster:
         for gid in sorted(ori_bed_db):
             chrn, gsp, gep, gdir = ori_bed_db[gid]
 
-            match_ctg = Adjuster.get_gene_ctg(ori_agp_db[chrn], gsp, gep)
+            match_ctg = Corrector.get_gene_ctg(ori_agp_db[chrn], gsp, gep)
 
             if match_ctg:
                 csp, cep, tig, _, tdir = match_ctg

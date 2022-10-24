@@ -19,22 +19,22 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QGraphicsView, QGridLayout, QHBoxLayout, QLabel,
     QLineEdit, QListWidget, QListWidgetItem, QPushButton,
     QSizePolicy, QWidget)
-from coll_asm_adj_gui.ui.custom_control import ControlGraphicsView
+from coll_asm_corr_gui.ui.custom_control import ControlGraphicsView
 
-class Ui_AssemblyAdjusterMain(object):
-    def setupUi(self, AssemblyAdjusterMain):
-        if not AssemblyAdjusterMain.objectName():
-            AssemblyAdjusterMain.setObjectName(u"AssemblyAdjusterMain")
-        AssemblyAdjusterMain.resize(1936, 1147)
-        self.gridLayout_2 = QGridLayout(AssemblyAdjusterMain)
+class Ui_AssemblyCorrectorMain(object):
+    def setupUi(self, AssemblyCorrectorMain):
+        if not AssemblyCorrectorMain.objectName():
+            AssemblyCorrectorMain.setObjectName(u"AssemblyAdjusterMain")
+        AssemblyCorrectorMain.resize(1936, 1147)
+        self.gridLayout_2 = QGridLayout(AssemblyCorrectorMain)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.plot_viewer = ControlGraphicsView(AssemblyAdjusterMain)
+        self.plot_viewer = ControlGraphicsView(AssemblyCorrectorMain)
         self.plot_viewer.setObjectName(u"plot_viewer")
         self.plot_viewer.setEnabled(False)
 
         self.gridLayout_2.addWidget(self.plot_viewer, 0, 0, 1, 1)
 
-        self.Frame = QFrame(AssemblyAdjusterMain)
+        self.Frame = QFrame(AssemblyCorrectorMain)
         self.Frame.setObjectName(u"Frame")
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -231,13 +231,13 @@ class Ui_AssemblyAdjusterMain(object):
         self.gridLayout_2.addWidget(self.Frame, 0, 1, 1, 1)
 
 
-        self.retranslateUi(AssemblyAdjusterMain)
+        self.retranslateUi(AssemblyCorrectorMain)
 
-        QMetaObject.connectSlotsByName(AssemblyAdjusterMain)
+        QMetaObject.connectSlotsByName(AssemblyCorrectorMain)
     # setupUi
 
     def retranslateUi(self, AssemblyAdjusterMain):
-        AssemblyAdjusterMain.setWindowTitle(QCoreApplication.translate("AssemblyAdjusterMain", u"Manual Collinearity Assembly Adjuster", None))
+        AssemblyAdjusterMain.setWindowTitle(QCoreApplication.translate("AssemblyAdjusterMain", u"CATG", None))
         self.label_2.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Target chromosome:", None))
         self.label_3.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Source block id:", None))
         self.file_loader_btn.setText(QCoreApplication.translate("AssemblyAdjusterMain", u"Load files", None))

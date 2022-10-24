@@ -1,5 +1,5 @@
 ## Introduction
-MCAAG (Manual Collinearity Assembly Adjuster GUI) is a GUI application base on Qt with PySide6. 
+CATG (**C**ollinearity-based **A**ssembly correc**T**or **G**UI) is a GUI application base on Qt with PySide6. 
 It is a tool that can adjust assembly with collinearity and generate tour files for assembly.
 
 ## Dependencies

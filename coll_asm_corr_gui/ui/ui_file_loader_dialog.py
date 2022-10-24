@@ -11,7 +11,7 @@
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-from coll_asm_adj_gui.ui.custom_control import DragLineEdit
+from coll_asm_corr_gui.ui.custom_control import DragLineEdit
 
 
 class Ui_FileLoaderDialog(object):
