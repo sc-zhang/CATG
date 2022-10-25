@@ -209,9 +209,8 @@ class Corrector:
             src_start_idx, tgt_start_idx = tgt_start_idx, src_start_idx
             src_end_idx, tgt_end_idx = tgt_end_idx, src_end_idx
 
-        if min(src_end_idx, tgt_end_idx) >= max(src_start_idx, tgt_start_idx):
-            return []
-
+        if tgt_start_idx < src_end_idx:
+            tgt_start_idx = src_end_idx + 1
         order = [agp_list[:src_start_idx],
                  agp_list[tgt_start_idx: tgt_end_idx+1],
                  agp_list[src_end_idx+1: tgt_start_idx],
