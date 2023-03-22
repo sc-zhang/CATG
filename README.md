@@ -55,7 +55,7 @@ You can resize the collinearity figure with wheel, and use mouse to drag it.
 
 ## Example
 
-### Step1. Open MCAAG and click "LOADFILES"
+### Step1. Open CATG and click "LOADFILES"
 ![](Manual/Step1.LoadFiles.png)
 
 ### Step2. Select files
