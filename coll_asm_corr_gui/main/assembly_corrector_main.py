@@ -7,7 +7,7 @@ from coll_asm_corr_gui.corrector import locator, vis, corrector
 from copy import deepcopy
 from traceback import format_exc
 from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox
-from PySide6.QtCore import QCoreApplication
+from PySide6.QtCore import QCoreApplication, QEventLoop
 
 
 class OptArgs:
@@ -113,7 +113,7 @@ class AssemblyCorrectorMain(QWidget):
                 if self.__load_file():
                     self.__add_options()
                     status = self.__show_pic()
-                    QCoreApplication.processEvents()
+                    QCoreApplication.processEvents(QEventLoop.AllEvents)
                     if status == -1:
                         return
                     self.__notify_with_title("Files loaded")
@@ -279,7 +279,7 @@ class AssemblyCorrectorMain(QWidget):
         self.ui.mod_btn.setEnabled(False)
         self.ui.undo_btn.setEnabled(False)
         self.ui.refresh_btn.setEnabled(False)
-        QCoreApplication.processEvents()
+        QCoreApplication.processEvents(QEventLoop.AllEvents)
         args = OptArgs()
 
         args.src_chr = self.ui.src_chr_cbox.currentText()
@@ -296,7 +296,7 @@ class AssemblyCorrectorMain(QWidget):
                 self.last_bed_db = deepcopy(self.qry_bed_db)
                 self.opt_method_db[opt](args)
                 self.__show_pic()
-                QCoreApplication.processEvents()
+                QCoreApplication.processEvents(QEventLoop.AllEvents)
                 self.ui.mod_btn.setEnabled(True)
                 self.ui.undo_btn.setEnabled(True)
                 self.ui.refresh_btn.setEnabled(True)
@@ -317,7 +317,7 @@ class AssemblyCorrectorMain(QWidget):
             self.last_bed_db = deepcopy(tmp_db)
             del tmp_db
             self.__show_pic()
-            QCoreApplication.processEvents()
+            QCoreApplication.processEvents(QEventLoop.AllEvents)
             self.__notify_with_title("Success")
         else:
             self.__notify_with_title("Unable restore")
