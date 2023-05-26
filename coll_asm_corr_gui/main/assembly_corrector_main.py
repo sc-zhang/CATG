@@ -7,6 +7,7 @@ from coll_asm_corr_gui.corrector import locator, vis, corrector
 from copy import deepcopy
 from traceback import format_exc
 from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox
+from PySide6.QtCore import QCoreApplication
 
 
 class OptArgs:
@@ -112,6 +113,7 @@ class AssemblyCorrectorMain(QWidget):
                 if self.__load_file():
                     self.__add_options()
                     status = self.__show_pic()
+                    QCoreApplication.processEvents()
                     if status == -1:
                         return
                     self.__notify_with_title("Files loaded")
@@ -275,6 +277,9 @@ class AssemblyCorrectorMain(QWidget):
     def __modify(self):
 
         self.ui.mod_btn.setEnabled(False)
+        self.ui.undo_btn.setEnabled(False)
+        self.ui.refresh_btn.setEnabled(False)
+        QCoreApplication.processEvents()
         args = OptArgs()
 
         args.src_chr = self.ui.src_chr_cbox.currentText()
@@ -291,8 +296,10 @@ class AssemblyCorrectorMain(QWidget):
                 self.last_bed_db = deepcopy(self.qry_bed_db)
                 self.opt_method_db[opt](args)
                 self.__show_pic()
+                QCoreApplication.processEvents()
                 self.ui.mod_btn.setEnabled(True)
-
+                self.ui.undo_btn.setEnabled(True)
+                self.ui.refresh_btn.setEnabled(True)
                 self.__notify_with_title("Success")
         except Exception as e:
             QMessageBox.critical(self, "Modify failed", format_exc())
@@ -310,6 +317,7 @@ class AssemblyCorrectorMain(QWidget):
             self.last_bed_db = deepcopy(tmp_db)
             del tmp_db
             self.__show_pic()
+            QCoreApplication.processEvents()
             self.__notify_with_title("Success")
         else:
             self.__notify_with_title("Unable restore")
