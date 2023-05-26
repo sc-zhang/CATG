@@ -7,3 +7,5 @@ venv
 *.exe
 *.build
 *.dist
+*.onefile-build
+*.app
