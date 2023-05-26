@@ -113,7 +113,6 @@ class AssemblyCorrectorMain(QWidget):
                 if self.__load_file():
                     self.__add_options()
                     status = self.__show_pic()
-                    QCoreApplication.processEvents(QEventLoop.AllEvents)
                     if status == -1:
                         return
                     self.__notify_with_title("Files loaded")
@@ -251,11 +250,13 @@ class AssemblyCorrectorMain(QWidget):
         self.ui.mod_btn.setEnabled(True)
         self.ui.undo_btn.setEnabled(True)
         self.ui.refresh_btn.setEnabled(True)
+        QCoreApplication.processEvents(QEventLoop.AllEvents)
 
     def __disable_buttons(self):
         self.ui.mod_btn.setEnabled(False)
         self.ui.undo_btn.setEnabled(False)
         self.ui.refresh_btn.setEnabled(False)
+        QCoreApplication.processEvents(QEventLoop.AllEvents)
 
     def __add_options(self):
         self.ui.src_chr_cbox.addItems(self.qry_chr_list)
@@ -290,7 +291,6 @@ class AssemblyCorrectorMain(QWidget):
 
         self.ui.mod_btn.setText("Modifying...")
         self.__disable_buttons()
-        QCoreApplication.processEvents(QEventLoop.AllEvents)
         args = OptArgs()
 
         args.src_chr = self.ui.src_chr_cbox.currentText()
@@ -309,7 +309,6 @@ class AssemblyCorrectorMain(QWidget):
                 self.__show_pic()
                 self.ui.mod_btn.setText("Modify")
                 self.__enable_buttons()
-                QCoreApplication.processEvents(QEventLoop.AllEvents)
                 self.__notify_with_title("Success")
         except Exception as e:
             QMessageBox.critical(self, "Modify failed", format_exc())
@@ -319,7 +318,6 @@ class AssemblyCorrectorMain(QWidget):
     def __undo_modify(self):
         self.ui.undo_btn.setText("Restoring")
         self.__disable_buttons()
-        QCoreApplication.processEvents(QEventLoop.AllEvents)
         if self.last_agp_db:
             self.__notify_with_title("Restoring last status")
             tmp_db = deepcopy(self.qry_agp_db)
@@ -332,7 +330,6 @@ class AssemblyCorrectorMain(QWidget):
             self.__show_pic()
             self.__enable_buttons()
             self.ui.undo_btn.setText("Undo")
-            QCoreApplication.processEvents(QEventLoop.AllEvents)
             self.__notify_with_title("Success")
         else:
             self.__notify_with_title("Unable restore")
@@ -340,11 +337,9 @@ class AssemblyCorrectorMain(QWidget):
     def __refresh(self):
         self.ui.refresh_btn.setText("Refreshing")
         self.__disable_buttons()
-        QCoreApplication.processEvents(QEventLoop.AllEvents)
         self.__show_pic()
         self.__enable_buttons()
         self.ui.refresh_btn.setText("Refresh")
-        QCoreApplication.processEvents(QEventLoop.AllEvents)
 
     def __rev_chr(self, args):
         if not args.is_rev:
