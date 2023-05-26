@@ -150,6 +150,7 @@ class VisContent:
 
         self.figure_content.plt.clf()
 
+        # draw grid lines
         for chrx in self.chr_list_x:
             offset_x_list.append(base_x)
             chrx_idx_db[chrx] = idx
@@ -183,8 +184,12 @@ class VisContent:
             base_y += chr_len_db[chry]
         offset_y_list.append(base_y)
 
-        self.figure_content.plt.plot(data_x, data_y, linestyle='', color='black', marker='o', markersize=0.5)
+        # draw dotplot
+        down_sample_dist = max(int(len(data_x) / 1500), 1)
+        self.figure_content.plt.plot(data_x[::down_sample_dist], data_y[::down_sample_dist],
+                                     linestyle='', color='black', marker='o', markersize=0.5)
 
+        # draw blocks and block ids
         for i in range(0, len(block_x)):
             block_pos = [(block_x[i][0] + block_x[i][1]) / 2.0, (block_y[i][0] + block_y[i][1]) / 2.0]
 
