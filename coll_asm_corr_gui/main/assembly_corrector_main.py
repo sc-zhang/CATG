@@ -276,6 +276,7 @@ class AssemblyCorrectorMain(QWidget):
     # Functions below are used for adjusting collinearity blocks
     def __modify(self):
 
+        self.ui.mod_btn.setText("Modifying...")
         self.ui.mod_btn.setEnabled(False)
         self.ui.undo_btn.setEnabled(False)
         self.ui.refresh_btn.setEnabled(False)
@@ -297,6 +298,7 @@ class AssemblyCorrectorMain(QWidget):
                 self.opt_method_db[opt](args)
                 self.__show_pic()
                 QCoreApplication.processEvents(QEventLoop.AllEvents)
+                self.ui.mod_btn.setText("Modify")
                 self.ui.mod_btn.setEnabled(True)
                 self.ui.undo_btn.setEnabled(True)
                 self.ui.refresh_btn.setEnabled(True)
