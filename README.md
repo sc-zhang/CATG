@@ -26,10 +26,6 @@ The query.bed, reference.bed, query.reference.anchors, query.agp are all files w
 
 ## Operations
 
-### Importance
-
-Once "MODIFY" is clicked, please waiting until the title bar show "Success" before next click.
-
 ### Main operations
 There are 6 type of operations can be done.
 
