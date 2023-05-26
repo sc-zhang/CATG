@@ -3,3 +3,7 @@
 .idea
 *.pyc
 __pycache__
+venv
+*.exe
+*.build
+*.dist
