@@ -15,8 +15,24 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 * matplotlib
 
 ## Installation
-Download executable file from release.
 
+### Download binary file
+Download executable file from release.
+### Run with source code
+```bash
+python3 CATG.py
+```
+### Package your own binary file
+```bash
+# Python==3.10
+python -m venv venv
+source venv/bin/activate
+pip install nuitka==1.5.6 PySide6==6.4.2 matplotlib ordered-set zstandard qt-material packaging==21.3
+# For windows
+python -m nuitka --standalone --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --plugin-enable=pyside6 --follow-import-to=matplotlib,qt_material --nofollow-import-to=tkinter --include-data-files="coll_asm_corr_gui/resources/CATG.png"="coll_asm_corr_gui/resources/CATG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_corr_gui/resources/CATG.ico" --onefile CATG.py
+# For macOS
+python -m nuitka --standalone --windows-disable-console --show-memory --show-progress --nofollow-imports --plugin-enable=pyside6 --follow-import-to=matplotlib,qt_material --nofollow-import-to=tkinter --include-data-files="coll_asm_corr_gui/resources/CATG.png"="coll_asm_corr_gui/resources/CATG.png" --include-package-data="qt_material" CATG.py --macos-create-app-bundle --macos-app-icon="coll_asm_corr_gui/resources/CATG.icns"
+```
 ## Data preparation
 Run jcvi for generating anchors file
 ```bash
