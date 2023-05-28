@@ -27,8 +27,7 @@ python3 CATG.py
 # Python==3.10
 python -m venv venv
 source venv/bin/activate
-# For some reason, these three Packages with the versions show below will
-# increase the success rate of packaging.
+# For some reason, these three Packages with the versions show below will increase the success rate of packaging.
 pip install nuitka==1.5.6
 pip install PySide6==6.4.2
 pip install packaging==21.3
