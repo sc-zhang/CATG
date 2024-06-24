@@ -41,7 +41,7 @@ python -m nuitka --standalone --windows-disable-console --show-memory --show-pro
 ## Data preparation
 Run jcvi for generating anchors file
 ```bash
-python -m jcvi.compara.catalog ortholog query.bed reference.bed
+python -m jcvi.compara.catalog ortholog query reference
 ```
 The query.bed, reference.bed, query.reference.anchors, query.agp are all files we need.
 
