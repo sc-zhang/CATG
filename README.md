@@ -11,7 +11,7 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 ## Installation
 
 ### 1. Download binary files (Recommended)
-Download executable file from release https://github.com/sc-zhang/CATG/releases/tag/v1.2.2.
+Download executable file from release https://github.com/sc-zhang/CATG/releases
 
 ### 2. Run with source code (Only for user who wants to modify this tool)
 
