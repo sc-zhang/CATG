@@ -72,11 +72,20 @@ You can resize the collinearity figure with wheel, and use mouse to drag it.
 
 ## Example
 
+Test data could be found in https://github.com/sc-zhang/CATG/blob/main/test/test_data.tar.gz
 ### Step1. Open CATG and click "LOADFILES"
 ![](Manual/Step1.LoadFiles.png)
 
 ### Step2. Select files
+File can be loaded by click <kbd>...</kbd> to open a file browser to select file or just drag file into text boxes.  
+
 ![](Manual/Step2.SelectFiles.png)
+
+**Notice** for test data unzip from test_data.tar.gz  
+"qry.bed" file should be used as "Query bed file"  
+"ref.bed" file should be used as "Reference bed file"  
+"qry.ref.anchors" file should be used as "Anchors file"  
+"qry.agp" file should be used as "Query AGP file"
 
 ### Step3. Set Operations
 ![](Manual/Step3.SetOperations.png)
