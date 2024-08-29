@@ -7,22 +7,27 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 ### Software
 * [jcvi](https://github.com/tanghaibao/jcvi)
 * [ALLHiC](https://github.com/tangerzhang/ALLHiC)
-* Python 3.7+
-
-### Python Modules
-* PySide6
-* qt-material
-* matplotlib
 
 ## Installation
 
-### Download binary file
-Download executable file from release.
-### Run with source code
+### 1. Download binary files (Recommended)
+Download executable file from release https://github.com/sc-zhang/CATG/releases/tag/v1.2.2.
+
+### 2. Run with source code (Only for user who wants to modify this tool)
+
+#### Environments
+Software:
+* Python 3.7+
+
+Python Modules:
+* PySide6
+* qt-material
+* matplotlib
 ```bash
 python3 CATG.py
 ```
-### Package your own binary file
+
+### 3. Build your own binary file (Only for user who wants to pack own binary file)
 ```bash
 # Python==3.10
 python -m venv venv
@@ -38,12 +43,14 @@ python -m nuitka --standalone --windows-disable-console --mingw64 --show-memory 
 # For macOS
 python -m nuitka --standalone --windows-disable-console --show-memory --show-progress --nofollow-imports --plugin-enable=pyside6 --follow-import-to=matplotlib,qt_material --nofollow-import-to=tkinter --include-data-files="coll_asm_corr_gui/resources/CATG.png"="coll_asm_corr_gui/resources/CATG.png" --include-package-data="qt_material" CATG.py --macos-create-app-bundle --macos-app-icon="coll_asm_corr_gui/resources/CATG.icns"
 ```
+
 ## Data preparation
 Run jcvi for generating anchors file
 ```bash
 python -m jcvi.compara.catalog ortholog query reference
 ```
-The query.bed, reference.bed, query.reference.anchors, query.agp are all files we need.
+The query.bed, reference.bed, query.reference.anchors, query.agp are all files we need.  
+**Notice:** details of data preparation could be found in https://github.com/sc-zhang/CATG/issues/1#issuecomment-2053556083
 
 ## Operations
 
@@ -81,7 +88,7 @@ File can be loaded by click <kbd>...</kbd> to open a file browser to select file
 
 ![](Manual/Step2.SelectFiles.png)
 
-**Notice** for test data unzip from test_data.tar.gz  
+**Notice:** for test data unzip from test_data.tar.gz  
 "qry.bed" file should be used as "Query bed file"  
 "ref.bed" file should be used as "Reference bed file"  
 "qry.ref.anchors" file should be used as "Anchors file"  
