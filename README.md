@@ -27,13 +27,13 @@ User can download executable file with following links.
 - https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG-v1.2.2.bin
 - https://zenodo.org/records/13621059/files/CATG-v1.2.2.bin?download=1
 
-## Usage
+# Usage
 
 The online version of user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki)
 
 The pdf version of user manual could be found in [CATG User Guide](https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG.User.Guide.pdf)
 
-## Test data
+# Test data
 
 1. Test data could be found in following links.
 - https://github.com/sc-zhang/CATG/archive/refs/tags/v1.2.2.zip
