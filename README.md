@@ -2,112 +2,27 @@
 CATG (**C**ollinearity-based **A**ssembly correc**T**or **G**UI) is a GUI application base on Qt with PySide6. 
 It is a tool that can adjust assembly with collinearity and generate tour files for assembly.
 
-## Dependencies
+# Installation
+## Download pre-build binary files
 
-### Software
-* [jcvi](https://github.com/tanghaibao/jcvi)
-* [ALLHiC](https://github.com/tangerzhang/ALLHiC)
+User can download executable file with following links.  
 
-## Installation
+1. Windows user  
+- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG-v1.2.2.exe
+- https://zenodo.org/records/13621059/files/CATG-v1.2.2.exe?download=1
 
-### 1. Download binary files (Recommended)
-Download executable file from release https://github.com/sc-zhang/CATG/releases
+2. Mac user (Apple silicon)
+- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG-v1.2.2.arm.dmg
+- https://zenodo.org/records/13621059/files/CATG-v1.2.2.arm.dmg?download=1
 
-### 2. Run with source code (Only for user who wants to modify this tool)
+3. Mac user (Intel silicon)
+- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG-v1.2.2.Intel.dmg
+- https://zenodo.org/records/13621059/files/CATG-v1.2.2.Intel.dmg?download=1
 
-#### Environments
-Software:
-* Python 3.7+
+4. Ubuntu user
+- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG-v1.2.2.bin
+- https://zenodo.org/records/13621059/files/CATG-v1.2.2.bin?download=1
 
-Python Modules:
-* PySide6
-* qt-material
-* matplotlib
-```bash
-python3 CATG.py
-```
+## Usage
 
-### 3. Build your own binary file (Only for user who wants to pack own binary file)
-```bash
-# Python==3.10
-python -m venv venv
-source venv/bin/activate
-# For some reason, these three Packages with the versions show below will increase the success rate of packaging.
-pip install nuitka==1.5.6
-pip install PySide6==6.4.2
-pip install packaging==21.3
-
-pip install matplotlib ordered-set zstandard qt-material
-# For windows
-python -m nuitka --standalone --windows-disable-console --mingw64 --show-memory --show-progress --nofollow-imports --plugin-enable=pyside6 --follow-import-to=matplotlib,qt_material --nofollow-import-to=tkinter --include-data-files="coll_asm_corr_gui/resources/CATG.png"="coll_asm_corr_gui/resources/CATG.png" --include-package-data="qt_material" --windows-icon-from-ico="coll_asm_corr_gui/resources/CATG.ico" --onefile CATG.py
-# For macOS
-python -m nuitka --standalone --windows-disable-console --show-memory --show-progress --nofollow-imports --plugin-enable=pyside6 --follow-import-to=matplotlib,qt_material --nofollow-import-to=tkinter --include-data-files="coll_asm_corr_gui/resources/CATG.png"="coll_asm_corr_gui/resources/CATG.png" --include-package-data="qt_material" CATG.py --macos-create-app-bundle --macos-app-icon="coll_asm_corr_gui/resources/CATG.icns"
-```
-
-## Data preparation
-Run jcvi for generating anchors file
-```bash
-python -m jcvi.compara.catalog ortholog query reference
-```
-The query.bed, reference.bed, query.reference.anchors, query.agp are all files we need.  
-**Notice:** details of data preparation could be found in https://github.com/sc-zhang/CATG/issues/1#issuecomment-2053556083
-
-## Operations
-
-### Main operations
-There are 6 type of operations can be done.
-
-1. **Insert front**  
-   Move block with source block id from source chromosome to target chromosome and insert it in front of target block.
-2. **Insert back**  
-   Move block with source block id from source chromosome to target chromosome and insert it after target block.
-3. **Insert head**  
-   Move block with source block id from source chromosome to target chromosome and insert it to the head of target chromosome.
-4. **Insert tail**  
-   Move block with source block id from source chromosome to target chromosome and insert it to the tail of target chromosome.  
-   _Operate 1-4 can work with Reverse checkbox, if Reverse checkbox is set checked, the block from source chromosome will be reverse complement before insert to target positiong._
-5. **Source chromosome**
-6. **Source block**  
-   These two operate only affect while Reverse checkbox is set checked, then it will reverse the source chromosome or source block.
-7. **Swap chromosome**
-8. **Swap block**  
-   These two operate can swap regions or chromosomes, and Reverse option won't affect.
-9. **Delete block**  
-   Delete block from source chromosome.
-### Others
-You can resize the collinearity figure with wheel, and use mouse to drag it.
-
-## Example
-
-Test data could be found in https://github.com/sc-zhang/CATG/blob/main/test/test_data.tar.gz
-### Step1. Open CATG and click "LOADFILES"
-![](Manual/Step1.LoadFiles.png)
-
-### Step2. Select files
-File can be loaded by click <kbd>...</kbd> to open a file browser to select file or just drag file into text boxes.  
-
-![](Manual/Step2.SelectFiles.png)
-
-**Notice:** for test data unzip from test_data.tar.gz  
-"qry.bed" file should be used as "Query bed file"  
-"ref.bed" file should be used as "Reference bed file"  
-"qry.ref.anchors" file should be used as "Anchors file"  
-"qry.agp" file should be used as "Query AGP file"
-
-### Step3. Set Operations
-![](Manual/Step3.SetOperations.png)
-The red rectangles above means move Block 1 in Chromosome 1 to the tail of Chromosome 1, and convert Block1 to its reverse complement. 
-
-### Step4. Modify
-After click "MODIFY" button, the new collinearity figure will be updated, it may take several seconds, please be patient.
-![](Manual/Step4.Modified.png)
-
-### Step5. Refresh
-If you want cluster less contigs in single block, increase Resolution value may help you.
-After that, click "REFRESH" button to update collinearity figure.
-![](Manual/Step5.Refresh.png)
-
-### Step6. Save
-Click "SAVE FILES" to save the adjusted tour files, after that ALLHiC_build can use for building new chromosome assembly from contig level assembly, or use allhic optimize to determine the order and orientation of contigs.
-![](Manual/Step6.SaveFiles.png)
-![](Manual/Step7.SavedFiles.png)
+The user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki), the pdf version could be found in 
