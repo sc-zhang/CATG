@@ -25,4 +25,6 @@ User can download executable file with following links.
 
 ## Usage
 
-The user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki), the pdf version could be found in 
+The online user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki)
+
+The pdf version could be found in https://github.com/sc-zhang/CATG/blob/main/Manual/CATG.pdf
