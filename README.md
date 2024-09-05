@@ -36,6 +36,10 @@ The pdf version of user manual could be found in [CATG User Guide](https://githu
 ## Test data
 
 1. Test data could be found in following links.
-- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/test_data.tar.gz
+- https://github.com/sc-zhang/CATG/archive/refs/tags/v1.2.2.zip
+- https://zenodo.org/records/13621059/files/sc-zhang/CATG-v1.2.2.zip?download=1
 
-2. Unzip test.tar.gz, four files: qry.agp, qry.bed, qry.ref.anchors, ref.bed could be found which can be used with this tool.
+2. Unzip this compressed file, a file named "test.tar.gz" could be found in test folder, then unzip test.tar.gz, four files: qry.agp, qry.bed, qry.ref.anchors, ref.bed could be found which can be used with this tool.
+
+3. test.tar.gz also could be found in following links.
+- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/test_data.tar.gz
