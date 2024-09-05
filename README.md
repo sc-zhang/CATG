@@ -1,3 +1,7 @@
+# CATG: A Tool for Correcting Genome Assembly with Collinearity
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13621059.svg)](https://doi.org/10.5281/zenodo.13621059)
+
 ## Introduction
 CATG (**C**ollinearity-based **A**ssembly correc**T**or **G**UI) is a GUI application base on Qt with PySide6. 
 It is a tool that can adjust assembly with collinearity and generate tour files for assembly.
@@ -25,6 +29,6 @@ User can download executable file with following links.
 
 ## Usage
 
-The online user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki)
+The online version of user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki)
 
-The pdf version could be found in [CATG User Guide](https://github.com/sc-zhang/CATG/blob/main/Manual/CATG%20User%20Guide.pdf)
+The pdf version of user manual could be found in [CATG User Guide](https://github.com/sc-zhang/CATG/blob/main/Manual/CATG%20User%20Guide.pdf)
