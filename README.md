@@ -32,3 +32,10 @@ User can download executable file with following links.
 The online version of user manual could be found in [CATG Wiki](https://github.com/sc-zhang/CATG/wiki)
 
 The pdf version of user manual could be found in [CATG User Guide](https://github.com/sc-zhang/CATG/releases/download/v1.2.2/CATG.User.Guide.pdf)
+
+## Test data
+
+1. Test data could be found in following links.
+- https://github.com/sc-zhang/CATG/releases/download/v1.2.2/test_data.tar.gz
+
+2. Unzip test.tar.gz, four files: qry.agp, qry.bed, qry.ref.anchors, ref.bed could be found which can be used with this tool.
