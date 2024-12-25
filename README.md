@@ -2,9 +2,14 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13621059.svg)](https://doi.org/10.5281/zenodo.13621059)
 
-## Introduction
+# Introduction
 CATG (**C**ollinearity-based **A**ssembly correc**T**or **G**UI) is a GUI application base on Qt with PySide6. 
 It is a tool that can adjust assembly with collinearity and generate tour files for assembly.
+
+# How to cite
+> CATG is now published in G3 Genes|Genomes|Genetics  
+> Zhang S, Du H, Zhang X, Wang B. 2024 Nov 22. Collinearity-based Assembly Correction Tool GUI: Software for collinearity-based genome assembly correction. G3 Genes|Genomes|Genetics.:jkae277. [doi:10.1093/g3journal/jkae277](https://doi.org/10.1093/g3journal/jkae277).
+
 
 # Installation
 ## Download pre-build binary files
