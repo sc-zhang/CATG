@@ -8,7 +8,7 @@ It is a tool that can adjust assembly with collinearity and generate tour files 
 
 # How to cite
 > CATG is now published in G3 Genes|Genomes|Genetics  
-> Shengcheng Zhang, Hejun Du, Xingtan Zhang, Binzhong Wang, Collinearity-based Assembly Correction Tool GUI: Software for collinearity-based genome assembly correction, G3 Genes|Genomes|Genetics, Volume 15, Issue 2, February 2025, jkae277, https://doi.org/10.1093/g3journal/jkae277 [doi:10.1093/g3journal/jkae277](https://doi.org/10.1093/g3journal/jkae277).
+> Shengcheng Zhang, Hejun Du, Xingtan Zhang, Binzhong Wang, Collinearity-based Assembly Correction Tool GUI: Software for collinearity-based genome assembly correction, G3 Genes|Genomes|Genetics, Volume 15, Issue 2, February 2025, jkae277, [https://doi.org/10.1093/g3journal/jkae277](https://doi.org/10.1093/g3journal/jkae277).
 
 
 # Installation
