@@ -1,7 +1,11 @@
-import matplotlib
-matplotlib.use("qt5agg")
+import matplotlib as mpl
+import numpy as np
+from matplotlib.collections import LineCollection
+
+mpl.use("qt5agg")
+
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.backends.backend_pdf
+
 import matplotlib.pyplot as plt
 from coll_asm_corr_gui.corrector.locator import euc_dist
 
@@ -9,7 +13,7 @@ from coll_asm_corr_gui.corrector.locator import euc_dist
 class VisCanvas(FigureCanvas):
 
     def __init__(self):
-        fig = plt.figure(figsize=(10, 10), dpi=300, tight_layout=True, facecolor="#FFF2E2")
+        fig = plt.figure(figsize=(10, 10), dpi=120, tight_layout=True, facecolor="#FFF2E2")
         self.plt = plt
         super(VisCanvas, self).__init__(fig)
 
@@ -24,6 +28,11 @@ class VisContent:
         self.data_db = {}
         self.block_regions = []
         self.figure_content = VisCanvas()
+        self._scatter = None
+        self._grid_x_lc = None
+        self._grid_y_lc = None
+        self._block_lc = None
+        self._texts = []
 
     def convert_link(self, links):
         chr_set_x = set()
@@ -126,8 +135,8 @@ class VisContent:
                     if rstart == -1 or rend == -1:
                         continue
                     self.block_detail.append([])
-                    for _ in range(rstart, rend+1):
-                        self.block_detail[-1].append(agp_db[chrx][_][2]+agp_db[chrx][_][4])
+                    for _ in range(rstart, rend + 1):
+                        self.block_detail[-1].append(agp_db[chrx][_][2] + agp_db[chrx][_][4])
                     ctg1 = agp_db[chrx][rstart][2]
                     ctg2 = agp_db[chrx][rend][2]
                     self.block_regions.append([rstart, ctg1, rend, ctg2])
@@ -148,21 +157,39 @@ class VisContent:
         idx = 0
         offset_x_list = []
 
-        self.figure_content.plt.clf()
+        # self.figure_content.plt.clf()
+        ax = self.figure_content.plt.gca()
+        ax.set_facecolor("#FFF2E2")
+
+        first = (self._scatter is None)
+
+        # draw dotplot
+        pts = np.column_stack([data_x, data_y])
+        if pts.shape[0] > 30000:
+            step = int(np.ceil(pts.shape[0] / 30000))
+            pts = pts[::step]
+        if first:
+            self._scatter = ax.scatter(pts[:, 0], pts[:, 1], s=1, marker=',', linewidths=0, color='black',
+                                       rasterized=True)
+        else:
+            self._scatter.set_offsets(pts)
 
         # draw grid lines
+        grid_x = []
         for chrx in self.chr_list_x:
             offset_x_list.append(base_x)
             chrx_idx_db[chrx] = idx
             idx += 1
-            self.figure_content.plt.plot([chr_len_db[chrx] + base_x, chr_len_db[chrx] + base_x], [0, max_y],
-                                         linestyle='-',
-                                         color='green',
-                                         linewidth=0.5, markersize=0)
+            grid_x.append([(chr_len_db[chrx] + base_x, 0), (chr_len_db[chrx] + base_x, max_y)])
             x_ticks.append(base_x + int(chr_len_db[chrx] / 2))
             x_labels.append(chrx)
             base_x += chr_len_db[chrx]
         offset_x_list.append(base_x)
+        if first:
+            self._grid_x_lc = LineCollection(grid_x, linewidths=0.5, color="green")
+            ax.add_collection(self._grid_x_lc)
+        else:
+            self._grid_x_lc.set_segments(grid_x)
 
         y_ticks = []
         y_labels = []
@@ -171,49 +198,63 @@ class VisContent:
         idx = 0
         offset_y_list = []
 
+        grid_y = []
         for chry in self.chr_list_y:
             offset_y_list.append(base_y)
             chry_idx_db[chry] = idx
             idx += 1
-            self.figure_content.plt.plot([0, max_x], [chr_len_db[chry] + base_y, chr_len_db[chry] + base_y],
-                                         linestyle='-',
-                                         color='green',
-                                         linewidth=0.5, markersize=0)
+            grid_y.append([(0, chr_len_db[chry] + base_y), (max_x, chr_len_db[chry] + base_y)])
             y_ticks.append(base_y + int(chr_len_db[chry] / 2))
             y_labels.append(chry)
             base_y += chr_len_db[chry]
         offset_y_list.append(base_y)
 
-        # draw dotplot
-        down_sample_dist = max(int(len(data_x) / 1500), 1)
-        self.figure_content.plt.plot(data_x[::down_sample_dist], data_y[::down_sample_dist],
-                                     linestyle='', color='black', marker='o', markersize=0.5)
+        if first:
+            self._grid_y_lc = LineCollection(grid_y, linewidths=0.5, color="green")
+            ax.add_collection(self._grid_y_lc)
+        else:
+            self._grid_y_lc.set_segments(grid_y)
 
         # draw blocks and block ids
+        block_lines = []
+        for t in getattr(self, "_texts", []):
+            t.remove()
+        self._texts.clear()
+
         for i in range(0, len(block_x)):
             block_pos = [(block_x[i][0] + block_x[i][1]) / 2.0, (block_y[i][0] + block_y[i][1]) / 2.0]
+            block_lines.append([(block_x[i][0], block_y[i][0]), (block_x[i][1], block_y[i][1])])
+            self._texts.append(
+                ax.text(block_pos[0], block_pos[1], i + 1, fontsize=8, color="blue", ha="right", bbox=dict(
+                    boxstyle="circle,pad=0",
+                    fc="white",
+                    ec="black",
+                    alpha=0.5,
+                    lw=1
+                )))
+            # self.figure_content.plt.annotate(i + 1,
+            #                                  xy=block_pos,
+            #                                  bbox=dict(
+            #                                      boxstyle="circle,pad=0",
+            #                                      fc="white",
+            #                                      ec="black",
+            #                                      alpha=0.5,
+            #                                      lw=1
+            #                                  ),
+            #                                  fontsize=8, color='blue', ha='right')
+        if first:
+            self._block_lc = LineCollection(block_lines, linewidths=0.5, color="orange")
+            ax.add_collection(self._block_lc)
+        else:
+            self._block_lc.set_segments(block_lines)
 
-            self.figure_content.plt.plot(block_x[i], block_y[i], linestyle='-', color='orange', linewidth=0.5,
-                                         markersize=0)
-            self.figure_content.plt.annotate(i+1,
-                                             xy=block_pos,
-                                             bbox=dict(
-                                                 boxstyle="circle,pad=0",
-                                                 fc="white",
-                                                 ec="black",
-                                                 alpha=0.5,
-                                                 lw=1
-                                             ),
-                                             fontsize=8, color='blue', ha='right')
+        ax.set_xlim([0, max_x])
+        ax.set_ylim([0, max_y])
+        ax.set_xticks(x_ticks)
+        ax.set_yticks(y_ticks)
+        ax.set_xlabel(qry_name)
+        ax.set_ylabel(ref_name)
 
-        self.figure_content.plt.xlim([0, max_x])
-        self.figure_content.plt.ylim([0, max_y])
-        self.figure_content.plt.xticks(x_ticks)
-        self.figure_content.plt.yticks(y_ticks)
-        self.figure_content.plt.xlabel(qry_name)
-        self.figure_content.plt.ylabel(ref_name)
-        ax = self.figure_content.plt.gca()
-        ax.set_facecolor("#FFF2E2")
         ax.set_xticklabels(x_labels, rotation=45)
         ax.set_yticklabels(y_labels, rotation=0)
         ax.xaxis.set_ticks_position('top')

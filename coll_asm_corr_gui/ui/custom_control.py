@@ -1,72 +1,79 @@
-from PySide6.QtWidgets import QGraphicsView, QGraphicsScene, QLineEdit
-from PySide6.QtCore import Qt, QPoint
+from PySide6.QtWidgets import QGraphicsView, QLineEdit, QGraphicsPixmapItem
+from PySide6.QtCore import Qt, QPointF
+from PySide6.QtGui import QPainter
 
 
 class ControlGraphicsView(QGraphicsView):
-
     def __init__(self, parent=None):
-        super(ControlGraphicsView, self).__init__()
+        super().__init__(parent)
+
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setDragMode(QGraphicsView.ScrollHandDrag)
-        self.setAcceptDrops(True)
-        self.__zoom = 5
+
+        # 以鼠标为中心缩放
+        self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setResizeAnchor(QGraphicsView.AnchorUnderMouse)
+
+        self.setDragMode(QGraphicsView.NoDrag)
+
+        self._dragging = False
+        self._last_scene_pos: QPointF | None = None
+        self._drag_item = None  # 当前拖动的 item
 
     def wheelEvent(self, event):
-        delta = event.angleDelta().y()
-        if delta == 0:
-            pass
-        if delta > 0 and self.__zoom >= 10:
-            return
-        elif delta < 0 and self.__zoom <= 0:
-            return
+        if event.angleDelta().y() > 0:
+            self.scale(1.25, 1.25)
         else:
-            cur_point = event.position()
-            scene_pos = self.mapToScene(QPoint(cur_point.x(), cur_point.y()))
+            self.scale(0.8, 0.8)
+        event.accept()
 
-            view_width = self.viewport().width()
-            view_height = self.viewport().height()
+    def _pick_pixmap_item(self, event):
+        """优先取鼠标下的 pixmap item；否则取 scene 里第一个 pixmap item。"""
+        item = self.itemAt(event.position().toPoint())
+        if isinstance(item, QGraphicsPixmapItem):
+            return item
 
-            h_scale = cur_point.x() / view_width
-            v_scale = cur_point.y() / view_height
+        sc = self.scene()
+        if sc is None:
+            return None
+        for it in sc.items():  # z-order 从上到下
+            if isinstance(it, QGraphicsPixmapItem):
+                return it
+        return None
 
-            if delta > 0:
-                self.scale(1.25, 1.25)
-                self.__zoom += 1
-            elif delta < 0:
-                self.scale(0.8, 0.8)
-                self.__zoom -= 1
-            view_point = self.transform().map(scene_pos)
-            self.horizontalScrollBar().setValue(int(view_point.x() - view_width * h_scale))
-            self.verticalScrollBar().setValue(int(view_point.y() - view_height * v_scale))
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._drag_item = self._pick_pixmap_item(event)
+            if self._drag_item is not None:
+                self._dragging = True
+                self._last_scene_pos = self.mapToScene(event.position().toPoint())
+                self.setCursor(Qt.ClosedHandCursor)
+                event.accept()
+                return
+        super().mousePressEvent(event)
 
-            self.update()
+    def mouseMoveEvent(self, event):
+        if self._dragging and self._drag_item is not None and self._last_scene_pos is not None:
+            cur = self.mapToScene(event.position().toPoint())
+            delta = cur - self._last_scene_pos
+            self._last_scene_pos = cur
 
+            # 直接移动画布 pixmap（跟手、与缩放无关）
+            self._drag_item.setPos(self._drag_item.pos() + delta)
 
-class ControlGraphicsScene(QGraphicsScene):
-    def __init__(self, parent=None):
-        super(ControlGraphicsScene, self).__init__()
+            event.accept()
+            return
+        super().mouseMoveEvent(event)
 
-        self.__left_click = False
-        self.__point = QPoint(0, 0)
-        self.__start_pos = None
-        self.__end_pos = None
-
-    def mouseMoveEvent(self, e):
-        if self.__left_click:
-            self.__end_pos = e.pos() - self.__start_pos
-            self.__point = self.__point + self.__end_pos
-            self.__start_pos = e.pos()
-            self.repaint()
-
-    def mousePressEvent(self, e):
-        if e.button() == Qt.LeftButton:
-            self.__left_click = True
-            self.__start_pos = e.pos()
-
-    def mouseReleaseEvent(self, e):
-        if e.button() == Qt.LeftButton:
-            self.__left_click = False
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton and self._dragging:
+            self._dragging = False
+            self._last_scene_pos = None
+            self._drag_item = None
+            self.setCursor(Qt.ArrowCursor)
+            event.accept()
+            return
+        super().mouseReleaseEvent(event)
 
 
 class DragLineEdit(QLineEdit):

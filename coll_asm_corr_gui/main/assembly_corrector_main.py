@@ -6,8 +6,10 @@ from coll_asm_corr_gui.ui import ui_assembly_corrector_main, custom_control
 from coll_asm_corr_gui.corrector import locator, vis, corrector
 from copy import deepcopy
 from traceback import format_exc
-from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox, QGraphicsPixmapItem, QGraphicsScene
 from PySide6.QtCore import QCoreApplication, QEventLoop
+from PySide6.QtGui import QImage, QPixmap
+import time
 
 
 class OptArgs:
@@ -78,6 +80,7 @@ class AssemblyCorrectorMain(QWidget):
 
         # reader for data
         self.reader = file_reader.Reader()
+        self._rgba_store = None
 
         self.__init_ui()
 
@@ -183,6 +186,27 @@ class AssemblyCorrectorMain(QWidget):
         else:
             self.__notify_with_title("Nothing saved")
 
+    def __ensure_scene_pixitem(self):
+        if not getattr(self, "graph_scene", None):
+            self.graph_scene = QGraphicsScene()
+            self.ui.plot_viewer.setScene(self.graph_scene)
+        if not getattr(self, "_pix_item", None):
+            self._pix_item = QGraphicsPixmapItem()
+            self.graph_scene.addItem(self._pix_item)
+
+    def __figure_to_pixmap(self, fig):
+        fig.canvas.draw()
+        w, h = fig.canvas.get_width_height()
+        buf = fig.canvas.buffer_rgba()
+        nbytes = w * h * 4
+        if getattr(self, "_rgba_store", None) is None or len(self._rgba_store) != nbytes:
+            self._rgba_store = bytearray(nbytes)
+
+        self._rgba_store[:] = buf
+        img = QImage(self._rgba_store, w, h, QImage.Format_RGBA8888)
+
+        return QPixmap.fromImage(img)
+
     def __show_pic(self):
         QCoreApplication.processEvents(QEventLoop.AllEvents)
         try:
@@ -216,13 +240,14 @@ class AssemblyCorrectorMain(QWidget):
             self.ui.tgt_blk_cbox.clear()
             if self.ui.tgt_chr_cbox.currentText() in self.block_list_db:
                 self.ui.tgt_blk_cbox.addItems(self.block_list_db[self.ui.tgt_chr_cbox.currentText()])
-            if not self.graph_scene:
-                self.graph_scene = custom_control.ControlGraphicsScene()
-                self.graph_scene.addWidget(self.mpl_vis.figure_content)
-                self.ui.plot_viewer.setScene(self.graph_scene)
-                self.ui.plot_viewer.show()
-            else:
-                self.mpl_vis.figure_content.draw()
+
+            self.__ensure_scene_pixitem()
+            pix = self.__figure_to_pixmap(self.mpl_vis.figure_content.figure)
+
+            self._pix_item.setPixmap(pix)
+            self.graph_scene.setSceneRect(self._pix_item.boundingRect())
+            self.ui.plot_viewer.update()
+
             QCoreApplication.processEvents(QEventLoop.AllEvents)
             self.__notify_with_title("Success")
         except Exception as e:
