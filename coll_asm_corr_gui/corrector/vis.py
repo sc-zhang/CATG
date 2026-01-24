@@ -232,16 +232,6 @@ class VisContent:
                     alpha=0.5,
                     lw=1
                 )))
-            # self.figure_content.plt.annotate(i + 1,
-            #                                  xy=block_pos,
-            #                                  bbox=dict(
-            #                                      boxstyle="circle,pad=0",
-            #                                      fc="white",
-            #                                      ec="black",
-            #                                      alpha=0.5,
-            #                                      lw=1
-            #                                  ),
-            #                                  fontsize=8, color='blue', ha='right')
         if first:
             self._block_lc = LineCollection(block_lines, linewidths=0.5, color="orange")
             ax.add_collection(self._block_lc)

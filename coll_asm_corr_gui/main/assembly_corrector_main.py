@@ -9,7 +9,6 @@ from traceback import format_exc
 from PySide6.QtWidgets import QWidget, QFileDialog, QMessageBox, QGraphicsPixmapItem, QGraphicsScene
 from PySide6.QtCore import QCoreApplication, QEventLoop
 from PySide6.QtGui import QImage, QPixmap
-import time
 
 
 class OptArgs:
